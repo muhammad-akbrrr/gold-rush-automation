@@ -1,0 +1,5 @@
+/target
+.env
+wallets/
+keeper_logs.sqlite
+.DS_Store
