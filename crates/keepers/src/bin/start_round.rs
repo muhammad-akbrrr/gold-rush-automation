@@ -1,16 +1,30 @@
 use anyhow::Result;
-use keeper_lib::client::anchor::{get_config_account, program_id_from_env};
-use keeper_lib::client::rpc::Rpc;
+use keepers::{App, config};
+use std::time::Duration;
+use tokio::time::{Instant, MissedTickBehavior, interval_at};
 
-fn main() -> Result<()> {
-    let rpc = Rpc::from_env()?;
-    let program_id = program_id_from_env()?;
-    let cfg = get_config_account(rpc.client(), &program_id)?;
+#[tokio::main]
+async fn main() -> Result<()> {
+    let cfg = config::load()?;
 
-    println!(
-        "Config loaded: admin={}, current_round_counter={}, version={}",
-        cfg.admin, cfg.current_round_counter, cfg.version
-    );
+    let period = Duration::from_secs(cfg.start_round_period_in_secs);
+    let start = Instant::now();
+    let mut ticker = interval_at(start, period);
+    ticker.set_missed_tick_behavior(MissedTickBehavior::Delay);
 
-    Ok(())
+    let app = App::init_from(cfg)?;
+
+    loop {
+        ticker.tick().await;
+        match keepers::keepers::start_round::run_one(&app) {
+            Ok(sigs) => {
+                if !sigs.is_empty() {
+                    println!("started {} rounds", sigs.len());
+                }
+            }
+            Err(e) => {
+                eprintln!("run_one error: {:#}", e)
+            }
+        }
+    }
 }

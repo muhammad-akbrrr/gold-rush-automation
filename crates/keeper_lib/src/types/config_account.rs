@@ -2,7 +2,7 @@ use crate::types::ProgramStatus;
 use anchor_lang::prelude::*;
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug)]
-pub struct Config {
+pub struct ConfigAccount {
     pub admin: Pubkey,
     pub keeper_authorities: Vec<Pubkey>,
     pub token_mint: Pubkey,
