@@ -16,6 +16,7 @@ async fn main() -> Result<()> {
 
     loop {
         ticker.tick().await;
+
         match keepers::keepers::start_round::run_one(&app) {
             Ok(sigs) => {
                 if !sigs.is_empty() {
