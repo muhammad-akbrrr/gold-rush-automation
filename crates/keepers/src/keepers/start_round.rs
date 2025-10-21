@@ -1,5 +1,7 @@
 use anyhow::Result;
-use keeper_lib::client::anchor::{capture_start_price, get_rounds_by_ids, start_round};
+use keeper_lib::client::anchor::{
+    capture_start_price, finalize_start_group_assets, get_rounds_by_ids, start_round,
+};
 use keeper_lib::pda::{derive_config_pda, derive_round_pda};
 use keeper_lib::types::{MarketType, RoundAccount, RoundStatus};
 use solana_sdk::pubkey::Pubkey;
@@ -97,6 +99,15 @@ fn start_group_round(
     )?;
 
     // finalize start group assets
+    finalize_start_group_assets(
+        app.rpc.client(),
+        app.signer(),
+        &config_pda,
+        &round_pda,
+        round,
+        &app.system_program_id,
+        &app.program_id,
+    )?;
 
     // finalize start groups
 

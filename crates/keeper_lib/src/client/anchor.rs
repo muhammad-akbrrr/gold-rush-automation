@@ -238,7 +238,7 @@ pub fn capture_start_price(
         }
 
         if group_asset.captured_start_price_assets == group_asset.total_assets {
-            println!("group {} already captured end price", group_id);
+            println!("group {} already captured start price", group_id);
             continue;
         }
 
@@ -295,10 +295,90 @@ pub fn capture_start_price(
     Ok(sigs)
 }
 
-fn finalize_start_group_assets() -> Result<Signature> {
-    todo!()
+pub fn finalize_start_group_assets(
+    client: &RpcClient,
+    payer: &Keypair,
+    config_pda: &Pubkey,
+    round_pda: &Pubkey,
+    round: &RoundAccount,
+    system_program_id: &Pubkey,
+    program_id: &Pubkey,
+) -> Result<Vec<Signature>> {
+    if !matches!(round.market_type, MarketType::GroupBattle) {
+        bail!("finalize_start_group_assets only supported for group battle rounds");
+    }
+
+    if round.total_groups < 1 {
+        bail!("finalize_start_group_assets requires at least one group");
+    }
+
+    let mut sigs: Vec<Signature> = Vec::new();
+
+    let data = sighash_global("finalize_start_group_asset").to_vec();
+
+    for group_id in 1..=round.total_groups {
+        let mut remaining_accounts: Vec<AccountMeta> = Vec::new();
+
+        let group_asset_pda = derive_group_asset_pda(program_id, round_pda, group_id);
+        let group_asset = get_group_asset_account(client, program_id, &group_asset_pda)?;
+
+        if group_asset.total_assets < 1 {
+            println!("group {} has no assets", group_id);
+            continue;
+        }
+
+        if group_asset.finalized_start_price_assets == group_asset.total_assets {
+            println!("group {} already finalized start price", group_id);
+            continue;
+        }
+
+        for asset_id in 1..=group_asset.total_assets {
+            let asset_pda = derive_asset_pda(program_id, &group_asset_pda, asset_id);
+            remaining_accounts.push(AccountMeta {
+                pubkey: asset_pda,
+                is_signer: false,
+                is_writable: true,
+            });
+        }
+
+        let accounts = vec![
+            AccountMeta::new(payer.pubkey(), true),
+            AccountMeta::new(*config_pda, false),
+            AccountMeta::new(*round_pda, false),
+            AccountMeta::new(group_asset_pda, false),
+            AccountMeta::new_readonly(*system_program_id, false),
+        ]
+        .into_iter()
+        .chain(remaining_accounts.into_iter())
+        .collect();
+
+        let instruction = Instruction {
+            data: data.clone(),
+            accounts,
+            program_id: *program_id,
+        };
+
+        let bh = client
+            .get_latest_blockhash()
+            .context("Failed to get latest blockhash")?;
+        let tx =
+            Transaction::new_signed_with_payer(&[instruction], Some(&payer.pubkey()), &[payer], bh);
+
+        let sig = client
+            .send_and_confirm_transaction(&tx)
+            .context("Failed to send and confirm transaction")?;
+
+        println!(
+            "finalize_start_group_assets for group {}: {}",
+            group_id, sig
+        );
+
+        sigs.push(sig);
+    }
+
+    Ok(sigs)
 }
 
-fn finalize_start_groups() -> Result<Signature> {
+pub fn finalize_start_groups() -> Result<Signature> {
     todo!()
 }
