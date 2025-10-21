@@ -327,6 +327,11 @@ pub fn finalize_start_group_assets(
             continue;
         }
 
+        if group_asset.captured_start_price_assets != group_asset.total_assets {
+            println!("group {} has not captured start price", group_id);
+            continue;
+        }
+
         if group_asset.finalized_start_price_assets == group_asset.total_assets {
             println!("group {} already finalized start price", group_id);
             continue;
@@ -379,6 +384,65 @@ pub fn finalize_start_group_assets(
     Ok(sigs)
 }
 
-pub fn finalize_start_groups() -> Result<Signature> {
-    todo!()
+pub fn finalize_start_groups(
+    client: &RpcClient,
+    payer: &Keypair,
+    config_pda: &Pubkey,
+    round_pda: &Pubkey,
+    round: &RoundAccount,
+    system_program_id: &Pubkey,
+    program_id: &Pubkey,
+) -> Result<Signature> {
+    if !matches!(round.market_type, MarketType::GroupBattle) {
+        bail!("finalize_start_groups only supported for group battle rounds");
+    }
+
+    if round.total_groups < 1 {
+        bail!("finalize_start_groups requires at least one group");
+    }
+
+    if round.captured_start_groups == round.total_groups {
+        bail!("finalize_start_groups already finalized start groups");
+    }
+
+    let data = sighash_global("finalize_start_groups").to_vec();
+
+    let mut remaining_accounts: Vec<AccountMeta> = Vec::new();
+
+    for group_id in 1..=round.total_groups {
+        let group_asset_pda = derive_group_asset_pda(program_id, round_pda, group_id);
+        remaining_accounts.push(AccountMeta {
+            pubkey: group_asset_pda,
+            is_signer: false,
+            is_writable: false,
+        });
+    }
+
+    let accounts = vec![
+        AccountMeta::new(payer.pubkey(), true),
+        AccountMeta::new(*config_pda, false),
+        AccountMeta::new(*round_pda, false),
+        AccountMeta::new_readonly(*system_program_id, false),
+    ]
+    .into_iter()
+    .chain(remaining_accounts.into_iter())
+    .collect();
+
+    let instruction = Instruction {
+        data: data.clone(),
+        accounts,
+        program_id: *program_id,
+    };
+
+    let bh = client
+        .get_latest_blockhash()
+        .context("Failed to get latest blockhash")?;
+    let tx =
+        Transaction::new_signed_with_payer(&[instruction], Some(&payer.pubkey()), &[payer], bh);
+
+    let sig = client
+        .send_and_confirm_transaction(&tx)
+        .context("Failed to send and confirm transaction")?;
+
+    Ok(sig)
 }

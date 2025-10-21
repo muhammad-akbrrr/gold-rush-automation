@@ -1,6 +1,7 @@
 use anyhow::Result;
 use keeper_lib::client::anchor::{
-    capture_start_price, finalize_start_group_assets, get_rounds_by_ids, start_round,
+    capture_start_price, finalize_start_group_assets, finalize_start_groups, get_rounds_by_ids,
+    start_round,
 };
 use keeper_lib::pda::{derive_config_pda, derive_round_pda};
 use keeper_lib::types::{MarketType, RoundAccount, RoundStatus};
@@ -110,6 +111,17 @@ fn start_group_round(
     )?;
 
     // finalize start groups
+    finalize_start_groups(
+        app.rpc.client(),
+        app.signer(),
+        &config_pda,
+        &round_pda,
+        round,
+        &app.system_program_id,
+        &app.program_id,
+    )?;
+
+    // start round
 
     return Err(anyhow::anyhow!("start_group_round not implemented"));
 }
