@@ -26,7 +26,13 @@ pub struct App {
 
 impl App {
     pub fn init_from(cfg: RuntimeConfig) -> Result<Self> {
-        let rpc = Rpc::new(&cfg.solana_rpc_url);
+        let rpc = Rpc::new(
+            &cfg.solana_rpc_url,
+            cfg.rpc_timeout_ms,
+            cfg.commitment,
+            cfg.preflight,
+            cfg.tx_max_retries,
+        );
         let signer = Arc::new(load_keypair_from_file(&cfg.keeper_keypair_path)?);
         let gold_price_feed =
             get_price_feed_account(0, &cfg.gold_price_feed_id, &cfg.push_oracle_program_id)?;

@@ -1,28 +1,49 @@
-use anyhow::{Context, Result};
-use solana_client::rpc_client::RpcClient;
-use std::env;
-
+use solana_client::{rpc_client::RpcClient, rpc_config::RpcSendTransactionConfig};
+use solana_commitment_config::{CommitmentConfig, CommitmentLevel};
+use std::time::Duration;
 pub struct Rpc {
     inner: RpcClient,
+    commitment_cfg: CommitmentConfig,
+    send_cfg: RpcSendTransactionConfig,
 }
 
 impl Rpc {
-    pub fn from_env() -> Result<Self> {
-        let _ = dotenvy::dotenv();
-        let rpc_url = env::var("SOLANA_RPC_URL").context("SOLANA_RPC_URL must be set")?;
+    pub fn new(
+        rpc_url: &str,
+        timeout_ms: u64,
+        commitment: CommitmentLevel,
+        preflight: bool,
+        max_retries: usize,
+    ) -> Self {
+        let commitment_cfg = CommitmentConfig { commitment };
+        let inner = RpcClient::new_with_timeout_and_commitment(
+            rpc_url.to_string(),
+            Duration::from_millis(timeout_ms),
+            commitment_cfg,
+        );
+        let send_cfg = RpcSendTransactionConfig {
+            skip_preflight: !preflight,
+            max_retries: Some(max_retries),
+            preflight_commitment: Some(commitment),
+            ..Default::default()
+        };
 
-        Ok(Self {
-            inner: RpcClient::new(rpc_url),
-        })
-    }
-
-    pub fn new(rpc_url: impl AsRef<str>) -> Self {
         Self {
-            inner: RpcClient::new(rpc_url.as_ref().to_string()),
+            inner,
+            commitment_cfg,
+            send_cfg,
         }
     }
 
     pub fn client(&self) -> &RpcClient {
         &self.inner
+    }
+
+    pub fn commitment_cfg(&self) -> &CommitmentConfig {
+        &self.commitment_cfg
+    }
+
+    pub fn send_cfg(&self) -> &RpcSendTransactionConfig {
+        &self.send_cfg
     }
 }
