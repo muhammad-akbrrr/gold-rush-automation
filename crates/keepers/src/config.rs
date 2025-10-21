@@ -8,8 +8,11 @@ pub struct RuntimeConfig {
     pub solana_rpc_url: String,
     pub commitment: CommitmentLevel,
     pub rpc_timeout_ms: u64,
-    pub tx_max_retries: usize,
     pub preflight: bool,
+    pub tx_max_retries: usize,
+    pub cu_limit: u32,
+    pub cu_price_micro_lamports: u64,
+    pub backoff_ms: u64,
 
     pub keeper_keypair_path: String,
     pub gold_price_feed_id: String,
@@ -30,6 +33,10 @@ pub fn load() -> Result<RuntimeConfig> {
     let rpc_timeout_ms = env_u64("RPC_TIMEOUT_MS", None).context("RPC_TIMEOUT_MS must be set")?;
     let tx_max_retries = env_usize("TX_MAX_RETRIES", None).context("TX_MAX_RETRIES must be set")?;
     let preflight = env_bool("PREFLIGHT", None).context("PREFLIGHT must be set")?;
+    let cu_limit = env_u32("COMPUTE_UNIT_LIMIT", None).context("COMPUTE_UNIT_LIMIT must be set")?;
+    let cu_price_micro_lamports = env_u64("PRIORITY_FEE_MICROLAMPORTS", None)
+        .context("PRIORITY_FEE_MICROLAMPORTS must be set")?;
+    let backoff_ms = env_u64("BACKOFF_MS", None).context("BACKOFF_MS must be set")?;
 
     let keeper_keypair_path =
         env_str("KEEPER_KEYPAIR_PATH", None).context("KEEPER_KEYPAIR_PATH must be set")?;
@@ -51,8 +58,11 @@ pub fn load() -> Result<RuntimeConfig> {
         solana_rpc_url,
         commitment,
         rpc_timeout_ms,
-        tx_max_retries,
         preflight,
+        tx_max_retries,
+        cu_limit,
+        cu_price_micro_lamports,
+        backoff_ms,
         keeper_keypair_path,
         gold_price_feed_id,
         push_oracle_program_id,
@@ -72,6 +82,10 @@ fn env_bool(key: &str, default: Option<bool>) -> Option<bool> {
 }
 
 fn env_u64(key: &str, default: Option<u64>) -> Option<u64> {
+    env::var(key).ok().and_then(|v| v.parse().ok()).or(default)
+}
+
+fn env_u32(key: &str, default: Option<u32>) -> Option<u32> {
     env::var(key).ok().and_then(|v| v.parse().ok()).or(default)
 }
 

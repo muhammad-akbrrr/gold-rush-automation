@@ -68,7 +68,7 @@ pub fn run_one(app: &App) -> Result<Vec<Signature>> {
 fn start_single_round(app: &App, config_pda: &Pubkey, round_pda: &Pubkey) -> Result<Signature> {
     println!("starting single round {}", round_pda);
     start_round(
-        app.rpc.client(),
+        &app.rpc,
         app.signer(),
         &config_pda,
         &round_pda,
@@ -91,7 +91,7 @@ fn start_group_round(
     if round.captured_start_groups < round.total_groups {
         // capture start price
         capture_start_price(
-            app.rpc.client(),
+            &app.rpc,
             app.signer(),
             &config_pda,
             &round_pda,
@@ -103,7 +103,7 @@ fn start_group_round(
 
         // finalize start group assets
         finalize_start_group_assets(
-            app.rpc.client(),
+            &app.rpc,
             app.signer(),
             &config_pda,
             &round_pda,
@@ -114,7 +114,7 @@ fn start_group_round(
 
         // finalize start groups
         finalize_start_groups(
-            app.rpc.client(),
+            &app.rpc,
             app.signer(),
             &config_pda,
             &round_pda,
@@ -126,7 +126,7 @@ fn start_group_round(
 
     // start round
     start_round(
-        app.rpc.client(),
+        &app.rpc,
         app.signer(),
         &config_pda,
         &round_pda,

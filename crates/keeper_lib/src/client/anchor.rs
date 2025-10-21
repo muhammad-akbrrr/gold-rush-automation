@@ -7,10 +7,10 @@ use solana_sdk::{
     instruction::{AccountMeta, Instruction},
     pubkey::Pubkey,
     signature::{Keypair, Signature, Signer},
-    transaction::Transaction,
 };
 
 use crate::{
+    client::rpc::{Rpc, send_tx_with_retry},
     pda::{derive_asset_pda, derive_config_pda, derive_group_asset_pda, derive_round_pda},
     types::{AssetAccount, ConfigAccount, GroupAssetAccount, MarketType, RoundAccount},
 };
@@ -168,7 +168,7 @@ pub fn get_asset_account(
 
 /// Start a round
 pub fn start_round(
-    client: &RpcClient,
+    rpc: &Rpc,
     payer: &Keypair,
     config_pda: &Pubkey,
     round_pda: &Pubkey,
@@ -191,21 +191,14 @@ pub fn start_round(
         accounts,
         program_id: *program_id,
     };
-    let bh = client
-        .get_latest_blockhash()
-        .context("Failed to get latest blockhash")?;
-    let tx =
-        Transaction::new_signed_with_payer(&[instruction], Some(&payer.pubkey()), &[payer], bh);
 
-    let sig = client
-        .send_and_confirm_transaction(&tx)
-        .context("Failed to send and confirm transaction")?;
+    let sig = send_tx_with_retry(&rpc, payer, [instruction].to_vec())?;
 
     Ok(sig)
 }
 
 pub fn capture_start_price(
-    client: &RpcClient,
+    rpc: &Rpc,
     payer: &Keypair,
     config_pda: &Pubkey,
     round_pda: &Pubkey,
@@ -230,7 +223,7 @@ pub fn capture_start_price(
         let mut remaining_accounts: Vec<AccountMeta> = Vec::new();
 
         let group_asset_pda = derive_group_asset_pda(program_id, round_pda, group_id);
-        let group_asset = get_group_asset_account(client, program_id, &group_asset_pda)?;
+        let group_asset = get_group_asset_account(rpc.client(), program_id, &group_asset_pda)?;
 
         if group_asset.total_assets < 1 {
             println!("group {} has no assets", group_id);
@@ -250,7 +243,7 @@ pub fn capture_start_price(
                 is_writable: true,
             });
 
-            let asset = get_asset_account(client, &asset_pda, program_id)?;
+            let asset = get_asset_account(rpc.client(), &asset_pda, program_id)?;
             let price_feed_account =
                 get_price_feed_account(0, &hex::encode(asset.feed_id), push_oracle_program_id)?;
             remaining_accounts.push(AccountMeta {
@@ -277,15 +270,7 @@ pub fn capture_start_price(
             program_id: *program_id,
         };
 
-        let bh = client
-            .get_latest_blockhash()
-            .context("Failed to get latest blockhash")?;
-        let tx =
-            Transaction::new_signed_with_payer(&[instruction], Some(&payer.pubkey()), &[payer], bh);
-
-        let sig = client
-            .send_and_confirm_transaction(&tx)
-            .context("Failed to send and confirm transaction")?;
+        let sig = send_tx_with_retry(&rpc, payer, [instruction].to_vec())?;
 
         println!("capture_start_price for group {}: {}", group_id, sig);
 
@@ -296,7 +281,7 @@ pub fn capture_start_price(
 }
 
 pub fn finalize_start_group_assets(
-    client: &RpcClient,
+    rpc: &Rpc,
     payer: &Keypair,
     config_pda: &Pubkey,
     round_pda: &Pubkey,
@@ -320,7 +305,7 @@ pub fn finalize_start_group_assets(
         let mut remaining_accounts: Vec<AccountMeta> = Vec::new();
 
         let group_asset_pda = derive_group_asset_pda(program_id, round_pda, group_id);
-        let group_asset = get_group_asset_account(client, program_id, &group_asset_pda)?;
+        let group_asset = get_group_asset_account(rpc.client(), program_id, &group_asset_pda)?;
 
         if group_asset.total_assets < 1 {
             println!("group {} has no assets", group_id);
@@ -363,15 +348,7 @@ pub fn finalize_start_group_assets(
             program_id: *program_id,
         };
 
-        let bh = client
-            .get_latest_blockhash()
-            .context("Failed to get latest blockhash")?;
-        let tx =
-            Transaction::new_signed_with_payer(&[instruction], Some(&payer.pubkey()), &[payer], bh);
-
-        let sig = client
-            .send_and_confirm_transaction(&tx)
-            .context("Failed to send and confirm transaction")?;
+        let sig = send_tx_with_retry(&rpc, payer, [instruction].to_vec())?;
 
         println!(
             "finalize_start_group_assets for group {}: {}",
@@ -385,7 +362,7 @@ pub fn finalize_start_group_assets(
 }
 
 pub fn finalize_start_groups(
-    client: &RpcClient,
+    rpc: &Rpc,
     payer: &Keypair,
     config_pda: &Pubkey,
     round_pda: &Pubkey,
@@ -434,15 +411,7 @@ pub fn finalize_start_groups(
         program_id: *program_id,
     };
 
-    let bh = client
-        .get_latest_blockhash()
-        .context("Failed to get latest blockhash")?;
-    let tx =
-        Transaction::new_signed_with_payer(&[instruction], Some(&payer.pubkey()), &[payer], bh);
-
-    let sig = client
-        .send_and_confirm_transaction(&tx)
-        .context("Failed to send and confirm transaction")?;
+    let sig = send_tx_with_retry(&rpc, payer, [instruction].to_vec())?;
 
     Ok(sig)
 }

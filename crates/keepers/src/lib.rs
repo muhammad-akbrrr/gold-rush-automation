@@ -32,6 +32,9 @@ impl App {
             cfg.commitment,
             cfg.preflight,
             cfg.tx_max_retries,
+            cfg.cu_limit,
+            cfg.cu_price_micro_lamports,
+            cfg.backoff_ms,
         );
         let signer = Arc::new(load_keypair_from_file(&cfg.keeper_keypair_path)?);
         let gold_price_feed =
