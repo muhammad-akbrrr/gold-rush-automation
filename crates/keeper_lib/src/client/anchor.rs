@@ -11,8 +11,8 @@ use solana_sdk::{
 };
 
 use crate::{
-    pda::{derive_config_pda, derive_round_pda},
-    types::{ConfigAccount, RoundAccount},
+    pda::{derive_asset_pda, derive_config_pda, derive_group_asset_pda, derive_round_pda},
+    types::{AssetAccount, ConfigAccount, GroupAssetAccount, MarketType, RoundAccount},
 };
 
 /// Generate a 8-byte sighash for a global instruction
@@ -25,6 +25,7 @@ fn sighash_global(ix_name: &str) -> [u8; 8] {
     sighash
 }
 
+/// Get the price feed account for a given feed ID
 pub fn get_price_feed_account(
     shard_id: u16,
     feed_id: &str,
@@ -64,12 +65,13 @@ pub fn get_config_account(client: &RpcClient, program_id: &Pubkey) -> Result<Con
         bail!("Config account data too short");
     }
 
-    let mut cursor: &[u8] = &data[8..];
+    let mut cursor = &data[8..];
     let cfg = ConfigAccount::deserialize(&mut cursor).context("Failed to deserialize Config")?;
 
     Ok(cfg)
 }
 
+/// Fetch and deserialize multiple Round accounts by their IDs
 pub fn get_rounds_by_ids(
     client: &RpcClient,
     program_id: &Pubkey,
@@ -104,20 +106,81 @@ pub fn get_rounds_by_ids(
     Ok(out)
 }
 
+/// Fetch and deserialize GroupAsset account
+pub fn get_group_asset_account(
+    client: &RpcClient,
+    program_id: &Pubkey,
+    group_asset_pda: &Pubkey,
+) -> Result<GroupAssetAccount> {
+    let acc = client
+        .get_account(&group_asset_pda)
+        .with_context(|| format!("Failed to get group asset account {}", group_asset_pda))?;
+
+    if acc.owner != *program_id {
+        bail!(
+            "Group asset owner mismatch. expected={}, got={}",
+            program_id,
+            acc.owner
+        );
+    }
+
+    let data = acc.data;
+    if data.len() < 8 {
+        bail!("Group asset account data too short");
+    }
+
+    let mut cursor = &data[8..];
+    let group_asset = GroupAssetAccount::deserialize(&mut cursor)
+        .context("Failed to deserialize GroupAssetAccount")?;
+
+    Ok(group_asset)
+}
+
+/// Fetch and deserialize Asset account
+pub fn get_asset_account(
+    client: &RpcClient,
+    asset_pda: &Pubkey,
+    program_id: &Pubkey,
+) -> Result<AssetAccount> {
+    let acc = client
+        .get_account(asset_pda)
+        .context("Failed to get asset account")?;
+
+    if acc.owner != *program_id {
+        bail!(
+            "Asset owner mismatch. expected={}, got={}",
+            program_id,
+            acc.owner
+        );
+    }
+
+    let data = acc.data;
+    if data.len() < 8 {
+        bail!("Asset account data too short");
+    }
+
+    let mut cursor = &data[8..];
+    let asset =
+        AssetAccount::deserialize(&mut cursor).context("Failed to deserialize AssetAccount")?;
+
+    Ok(asset)
+}
+
+/// Start a round
 pub fn start_round(
-    rpc: &RpcClient,
+    client: &RpcClient,
     payer: &Keypair,
+    config_pda: &Pubkey,
     round_pda: &Pubkey,
     gold_price_feed: &Pubkey,
     system_program_id: &Pubkey,
     program_id: &Pubkey,
 ) -> Result<Signature> {
-    let config_pda = derive_config_pda(&program_id);
     let data = sighash_global("start_round").to_vec();
 
     let accounts = vec![
         AccountMeta::new(payer.pubkey(), true),
-        AccountMeta::new(config_pda, false),
+        AccountMeta::new(*config_pda, false),
         AccountMeta::new(*round_pda, false),
         AccountMeta::new_readonly(*gold_price_feed, false),
         AccountMeta::new_readonly(*system_program_id, false),
@@ -128,15 +191,114 @@ pub fn start_round(
         accounts,
         program_id: *program_id,
     };
-    let bh = rpc
+    let bh = client
         .get_latest_blockhash()
         .context("Failed to get latest blockhash")?;
     let tx =
         Transaction::new_signed_with_payer(&[instruction], Some(&payer.pubkey()), &[payer], bh);
 
-    let sig = rpc
+    let sig = client
         .send_and_confirm_transaction(&tx)
         .context("Failed to send and confirm transaction")?;
 
     Ok(sig)
+}
+
+pub fn capture_start_price(
+    client: &RpcClient,
+    payer: &Keypair,
+    config_pda: &Pubkey,
+    round_pda: &Pubkey,
+    round: &RoundAccount,
+    push_oracle_program_id: &Pubkey,
+    system_program_id: &Pubkey,
+    program_id: &Pubkey,
+) -> Result<Vec<Signature>> {
+    if !matches!(round.market_type, MarketType::GroupBattle) {
+        bail!("capture_start_price only supported for group battle rounds");
+    }
+
+    if round.total_groups < 1 {
+        bail!("capture_start_price requires at least one group");
+    }
+
+    let mut sigs: Vec<Signature> = Vec::new();
+
+    let data = sighash_global("capture_start_price").to_vec();
+
+    for group_id in 1..=round.total_groups {
+        let mut remaining_accounts: Vec<AccountMeta> = Vec::new();
+
+        let group_asset_pda = derive_group_asset_pda(program_id, round_pda, group_id);
+        let group_asset = get_group_asset_account(client, program_id, &group_asset_pda)?;
+
+        if group_asset.total_assets < 1 {
+            println!("group {} has no assets", group_id);
+            continue;
+        }
+
+        if group_asset.captured_start_price_assets == group_asset.total_assets {
+            println!("group {} already captured end price", group_id);
+            continue;
+        }
+
+        for asset_id in 1..=group_asset.total_assets {
+            let asset_pda = derive_asset_pda(program_id, &group_asset_pda, asset_id);
+            remaining_accounts.push(AccountMeta {
+                pubkey: asset_pda,
+                is_signer: false,
+                is_writable: true,
+            });
+
+            let asset = get_asset_account(client, &asset_pda, program_id)?;
+            let price_feed_account =
+                get_price_feed_account(0, &hex::encode(asset.feed_id), push_oracle_program_id)?;
+            remaining_accounts.push(AccountMeta {
+                pubkey: price_feed_account,
+                is_signer: false,
+                is_writable: false,
+            });
+        }
+
+        let accounts = vec![
+            AccountMeta::new(payer.pubkey(), true),
+            AccountMeta::new(*config_pda, false),
+            AccountMeta::new(*round_pda, false),
+            AccountMeta::new(group_asset_pda, false),
+            AccountMeta::new_readonly(*system_program_id, false),
+        ]
+        .into_iter()
+        .chain(remaining_accounts.into_iter())
+        .collect();
+
+        let instruction = Instruction {
+            data: data.clone(),
+            accounts,
+            program_id: *program_id,
+        };
+
+        let bh = client
+            .get_latest_blockhash()
+            .context("Failed to get latest blockhash")?;
+        let tx =
+            Transaction::new_signed_with_payer(&[instruction], Some(&payer.pubkey()), &[payer], bh);
+
+        let sig = client
+            .send_and_confirm_transaction(&tx)
+            .context("Failed to send and confirm transaction")?;
+
+        println!("capture_start_price for group {}: {}", group_id, sig);
+
+        sigs.push(sig);
+    }
+
+    Ok(sigs)
+}
+
+fn finalize_start_group_assets() -> Result<Signature> {
+    todo!()
+}
+
+fn finalize_start_groups() -> Result<Signature> {
+    todo!()
 }
