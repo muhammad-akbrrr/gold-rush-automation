@@ -172,7 +172,7 @@ pub fn start_round(
     payer: &Keypair,
     config_pda: &Pubkey,
     round_pda: &Pubkey,
-    gold_price_feed: &Pubkey,
+    gold_price_feed: Option<&Pubkey>,
     system_program_id: &Pubkey,
     program_id: &Pubkey,
 ) -> Result<Signature> {
@@ -182,7 +182,7 @@ pub fn start_round(
         AccountMeta::new(payer.pubkey(), true),
         AccountMeta::new(*config_pda, false),
         AccountMeta::new(*round_pda, false),
-        AccountMeta::new_readonly(*gold_price_feed, false),
+        AccountMeta::new_readonly(*gold_price_feed.unwrap_or(&program_id), false), // use program id if no gold price feed is provided
         AccountMeta::new_readonly(*system_program_id, false),
     ];
 

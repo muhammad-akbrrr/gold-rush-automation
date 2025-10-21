@@ -72,7 +72,7 @@ fn start_single_round(app: &App, config_pda: &Pubkey, round_pda: &Pubkey) -> Res
         app.signer(),
         &config_pda,
         &round_pda,
-        &app.gold_price_feed,
+        Some(&app.gold_price_feed),
         &app.system_program_id,
         &app.program_id,
     )
@@ -87,41 +87,52 @@ fn start_group_round(
 ) -> Result<Signature> {
     println!("starting group round {}", round_pda);
 
-    // capture start price
-    capture_start_price(
-        app.rpc.client(),
-        app.signer(),
-        &config_pda,
-        &round_pda,
-        round,
-        &app.push_oracle_program_id,
-        &app.system_program_id,
-        &app.program_id,
-    )?;
+    // if round has not captured start groups
+    if round.captured_start_groups < round.total_groups {
+        // capture start price
+        capture_start_price(
+            app.rpc.client(),
+            app.signer(),
+            &config_pda,
+            &round_pda,
+            round,
+            &app.push_oracle_program_id,
+            &app.system_program_id,
+            &app.program_id,
+        )?;
 
-    // finalize start group assets
-    finalize_start_group_assets(
-        app.rpc.client(),
-        app.signer(),
-        &config_pda,
-        &round_pda,
-        round,
-        &app.system_program_id,
-        &app.program_id,
-    )?;
+        // finalize start group assets
+        finalize_start_group_assets(
+            app.rpc.client(),
+            app.signer(),
+            &config_pda,
+            &round_pda,
+            round,
+            &app.system_program_id,
+            &app.program_id,
+        )?;
 
-    // finalize start groups
-    finalize_start_groups(
-        app.rpc.client(),
-        app.signer(),
-        &config_pda,
-        &round_pda,
-        round,
-        &app.system_program_id,
-        &app.program_id,
-    )?;
+        // finalize start groups
+        finalize_start_groups(
+            app.rpc.client(),
+            app.signer(),
+            &config_pda,
+            &round_pda,
+            round,
+            &app.system_program_id,
+            &app.program_id,
+        )?;
+    }
 
     // start round
-
-    return Err(anyhow::anyhow!("start_group_round not implemented"));
+    start_round(
+        app.rpc.client(),
+        app.signer(),
+        &config_pda,
+        &round_pda,
+        None,
+        &app.system_program_id,
+        &app.program_id,
+    )
+    .map_err(|err| anyhow::anyhow!("start_round failed for {}: {:#}", round_pda, err))
 }
