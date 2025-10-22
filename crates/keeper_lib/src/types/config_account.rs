@@ -1,4 +1,4 @@
-use crate::types::ProgramStatus;
+use crate::types::enums::ProgramStatus;
 use anchor_lang::prelude::*;
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug)]

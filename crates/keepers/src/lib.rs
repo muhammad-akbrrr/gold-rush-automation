@@ -6,7 +6,8 @@ use keeper_lib::{
         rpc::Rpc,
     },
     pda::derive_token_account_pda,
-    types::ConfigAccount,
+    storage::sqlite::{SQLiteLogConfig, init_global_logger},
+    types::config_account::ConfigAccount,
     wallet::load_keypair_from_file,
 };
 use solana_sdk::pubkey::Pubkey;
@@ -15,6 +16,7 @@ use std::sync::Arc;
 
 pub mod config;
 pub mod keepers;
+pub mod logging;
 
 pub struct App {
     rpc: Rpc,
@@ -52,6 +54,25 @@ impl App {
             &cfg.treasury,
             &cfg.token_mint,
         );
+
+        let keeper_instance_id = cfg
+            .keeper_instance_id
+            .clone()
+            .unwrap_or_else(|| format!("pid:{}", std::process::id()));
+
+        if cfg.persist_logs {
+            let log_cfg = SQLiteLogConfig {
+                path: cfg.log_db_path.clone(),
+                batch_max: cfg.log_batch_max,
+                batch_ms: cfg.log_batch_ms,
+                queue_cap: cfg.log_queue_cap,
+                retention_days: cfg.log_retention_days,
+                keeper_instance_id: keeper_instance_id.clone(),
+            };
+            init_global_logger(log_cfg.clone());
+            // Store default instance id for entries that don't set it
+            keeper_lib::storage::sqlite::set_default_instance_id(keeper_instance_id.clone());
+        }
 
         Ok(Self {
             rpc,

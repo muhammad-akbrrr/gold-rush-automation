@@ -29,6 +29,18 @@ pub struct RuntimeConfig {
     pub push_oracle_program_id: Pubkey,
     pub system_program_id: Pubkey,
     pub program_id: Pubkey,
+
+    pub log_level: String,
+    pub log_format: String,
+    pub log_color: bool,
+    pub log_sample_debug: f64,
+    pub persist_logs: bool,
+    pub log_db_path: String,
+    pub log_batch_max: usize,
+    pub log_batch_ms: u64,
+    pub log_queue_cap: usize,
+    pub log_retention_days: u64,
+    pub keeper_instance_id: Option<String>,
 }
 
 pub fn load() -> Result<RuntimeConfig> {
@@ -69,6 +81,18 @@ pub fn load() -> Result<RuntimeConfig> {
         env_pubkey("SYSTEM_PROGRAM_ID", None).context("SYSTEM_PROGRAM_ID must be set")?;
     let program_id = env_pubkey("PROGRAM_ID", None).context("PROGRAM_ID must be set")?;
 
+    let log_level = env_str("LOG_LEVEL", Some("info".to_string())).unwrap();
+    let log_format = env_str("LOG_FORMAT", Some("json".to_string())).unwrap();
+    let log_color = env_bool("LOG_COLOR", Some(false)).unwrap();
+    let log_sample_debug = env_f64("LOG_SAMPLE_DEBUG", Some(0.1)).unwrap();
+    let persist_logs = env_bool("PERSIST_LOGS", Some(true)).unwrap();
+    let log_db_path = env_str("LOG_DB_PATH", Some("data/logs.sqlite".to_string())).unwrap();
+    let log_batch_max = env_usize("LOG_BATCH_MAX", Some(200)).unwrap();
+    let log_batch_ms = env_u64("LOG_BATCH_MS", Some(200)).unwrap();
+    let log_queue_cap = env_usize("LOG_QUEUE_CAP", Some(10_000)).unwrap();
+    let log_retention_days = env_u64("LOG_RETENTION_DAYS", Some(90)).unwrap();
+    let keeper_instance_id = env_str("KEEPER_INSTANCE_ID", None);
+
     Ok(RuntimeConfig {
         solana_rpc_url,
         commitment,
@@ -90,6 +114,17 @@ pub fn load() -> Result<RuntimeConfig> {
         push_oracle_program_id,
         system_program_id,
         program_id,
+        log_level,
+        log_format,
+        log_color,
+        log_sample_debug,
+        persist_logs,
+        log_db_path,
+        log_batch_max,
+        log_batch_ms,
+        log_queue_cap,
+        log_retention_days,
+        keeper_instance_id,
     })
 }
 
@@ -128,4 +163,8 @@ fn env_commitment(key: &str, default: Option<CommitmentLevel>) -> Option<Commitm
         _ => None,
     }
     .or(default)
+}
+
+fn env_f64(key: &str, default: Option<f64>) -> Option<f64> {
+    env::var(key).ok().and_then(|v| v.parse().ok()).or(default)
 }

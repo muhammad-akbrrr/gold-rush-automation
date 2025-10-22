@@ -6,9 +6,10 @@ use keeper_lib::{
         settle_group_round, settle_single_round,
     },
     pda::{derive_config_pda, derive_round_pda, derive_round_vault_pda},
-    types::{MarketType, RoundAccount, RoundStatus},
+    types::{enums::MarketType, enums::RoundStatus, round_account::RoundAccount},
 };
 use solana_sdk::{pubkey::Pubkey, signature::Signature};
+use tracing::{debug, info, warn};
 
 use crate::App;
 
@@ -28,16 +29,15 @@ pub fn run_one(app: &App) -> Result<Vec<Signature>> {
     let batch_size = 100;
 
     while start <= end {
-        println!("======================={}=======================", start);
+        debug!(batch_start = start, "processing rounds batch");
 
         let upper = start.saturating_add(batch_size - 1).min(end);
         let ids: Vec<u64> = (start..=upper).collect();
         let rounds = get_rounds_by_ids(app.rpc.client(), &app.program_id, &ids)?;
-        println!("found {} rounds", rounds.len());
+        debug!(batch_start = start, batch_end = upper, total = rounds.len(), "fetched rounds batch");
 
         for round in rounds {
-            println!("--------------------------------");
-            println!("round {:#?}", round);
+            debug!(round_id = round.id, status = ?round.status, end_time = round.end_time, market_type = ?round.market_type, "round fetched");
 
             if matches!(
                 round.status,
@@ -75,11 +75,11 @@ pub fn run_one(app: &App) -> Result<Vec<Signature>> {
                 };
                 match sig_res {
                     Ok(sig) => {
-                        println!("settled round {}: {}", round.id, sig);
+                        info!(round_id = round.id, tx_sig = %sig, "round settled");
                         sigs.push(sig);
                     }
                     Err(err) => {
-                        eprintln!("settle_round failed for round {}: {:#}", round.id, err);
+                        warn!(round_id = round.id, error = %err, "settle_round failed");
                         continue;
                     }
                 }
@@ -99,7 +99,7 @@ fn settle_single(
     round_vault_pda: &Pubkey,
     round: &RoundAccount,
 ) -> Result<Signature> {
-    println!("settling single round {}", round_pda);
+    info!(round_pda = %round_pda, "settling single round");
 
     settle_single_round(
         &app.rpc,
@@ -127,7 +127,7 @@ fn settle_group(
     round_vault_pda: &Pubkey,
     round: &RoundAccount,
 ) -> Result<Vec<Signature>> {
-    println!("settling group round {}", round_pda);
+    info!(round_pda = %round_pda, "settling group round");
 
     // if round has not captured end groups
     if round.captured_end_groups < round.total_groups {

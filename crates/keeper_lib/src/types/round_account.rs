@@ -1,4 +1,4 @@
-use crate::types::{MarketType, RoundStatus};
+use crate::types::enums::{MarketType, RoundStatus};
 use anchor_lang::prelude::*;
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug)]

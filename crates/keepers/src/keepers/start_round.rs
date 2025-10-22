@@ -6,9 +6,10 @@ use keeper_lib::{
         start_round,
     },
     pda::{derive_config_pda, derive_round_pda},
-    types::{MarketType, RoundAccount, RoundStatus},
+    types::{enums::MarketType, enums::RoundStatus, round_account::RoundAccount},
 };
 use solana_sdk::{pubkey::Pubkey, signature::Signature};
+use tracing::{debug, info, warn};
 
 use crate::App;
 
@@ -31,13 +32,10 @@ pub fn run_one(app: &App) -> Result<Vec<Signature>> {
         let upper = start.saturating_add(batch_size - 1).min(end);
         let ids: Vec<u64> = (start..=upper).collect();
         let rounds = get_rounds_by_ids(app.rpc.client(), &app.program_id, &ids)?;
-        println!("found {} rounds", rounds.len());
+        debug!(batch_start = start, batch_end = upper, total = rounds.len(), "fetched rounds batch");
 
         for round in rounds {
-            println!("round {}: {:?}", round.id, round.status);
-            println!("round start time: {}", round.start_time);
-            println!("now: {}", now);
-            println!("round market type: {:?}", round.market_type);
+            debug!(round_id = round.id, status = ?round.status, start_time = round.start_time, now, market_type = ?round.market_type, "round fetched");
 
             if matches!(round.status, RoundStatus::Scheduled) && round.start_time <= now {
                 let round_pda = derive_round_pda(&app.program_id, round.id);
@@ -50,11 +48,11 @@ pub fn run_one(app: &App) -> Result<Vec<Signature>> {
                 };
                 match sig_res {
                     Ok(sig) => {
-                        println!("started round {}: {}", round.id, sig);
+                        info!(round_id = round.id, tx_sig = %sig, "round started");
                         sigs.push(sig);
                     }
                     Err(err) => {
-                        eprintln!("start_round failed for round {}: {:#}", round.id, err);
+                        warn!(round_id = round.id, error = %err, "start_round failed");
                         continue;
                     }
                 }
@@ -68,7 +66,7 @@ pub fn run_one(app: &App) -> Result<Vec<Signature>> {
 }
 
 fn start_single_round(app: &App, config_pda: &Pubkey, round_pda: &Pubkey) -> Result<Signature> {
-    println!("starting single round {}", round_pda);
+    info!(round_pda = %round_pda, "starting single round");
     start_round(
         &app.rpc,
         app.signer(),
@@ -87,7 +85,7 @@ fn start_group_round(
     round_pda: &Pubkey,
     round: &RoundAccount,
 ) -> Result<Signature> {
-    println!("starting group round {}", round_pda);
+    info!(round_pda = %round_pda, "starting group round");
 
     // if round has not captured start groups
     if round.captured_start_groups < round.total_groups {

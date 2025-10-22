@@ -1,3 +1,4 @@
+use crate::storage::sqlite::{TxLog, get_tx_context, log_tx};
 use anyhow::{Context, Result};
 use solana_client::{rpc_client::RpcClient, rpc_config::RpcSendTransactionConfig};
 use solana_commitment_config::{CommitmentConfig, CommitmentLevel};
@@ -8,6 +9,7 @@ use solana_sdk::{
     transaction::Transaction,
 };
 use std::{thread::sleep, time::Duration};
+use tracing::{debug, warn};
 
 pub struct Rpc {
     inner: RpcClient,
@@ -135,8 +137,68 @@ pub fn send_tx_with_retry(
             commitment_cfg.clone(),
             send_cfg.clone(),
         ) {
-            Ok(sig) => return Ok(sig),
+            Ok(sig) => {
+                let sig_s = sig.to_string();
+                let tail = if sig_s.len() > 12 {
+                    &sig_s[sig_s.len() - 12..]
+                } else {
+                    sig_s.as_str()
+                };
+                debug!(
+                    attempt,
+                    cu_limit,
+                    cu_price_micro_lamports,
+                    tx_sig_tail = tail,
+                    "tx confirmed"
+                );
+                if let Some(ctx) = get_tx_context() {
+                    log_tx(TxLog {
+                        keeper_type: ctx.keeper_type,
+                        keeper_instance_id: String::new(),
+                        op: ctx.op,
+                        round_id: ctx.round_id,
+                        group_id: ctx.group_id,
+                        range_start: ctx.range_start,
+                        range_end: ctx.range_end,
+                        transaction_signature: Some(sig.to_string()),
+                        status: "success".to_string(),
+                        error_message: None,
+                        attempt: attempt as i64,
+                        retry_count: (attempt - 1) as i64,
+                        backoff_ms: backoff_ms.saturating_mul(attempt as u64) as i64,
+                        gas_used: Some(cu_limit as i64),
+                        module: Some(module_path!().to_string()),
+                        file: Some(file!().to_string()),
+                        line: Some(line!() as i64),
+                    });
+                }
+                return Ok(sig);
+            }
             Err(e) => {
+                warn!(attempt, backoff_ms = backoff_ms.saturating_mul(attempt as u64), error = %e, "tx attempt failed, backing off");
+                if attempt == max_retries {
+                    if let Some(ctx) = get_tx_context() {
+                        log_tx(TxLog {
+                            keeper_type: ctx.keeper_type,
+                            keeper_instance_id: String::new(),
+                            op: ctx.op,
+                            round_id: ctx.round_id,
+                            group_id: ctx.group_id,
+                            range_start: ctx.range_start,
+                            range_end: ctx.range_end,
+                            transaction_signature: None,
+                            status: "failed".to_string(),
+                            error_message: Some(format!("{:#}", e)),
+                            attempt: attempt as i64,
+                            retry_count: (attempt - 1) as i64,
+                            backoff_ms: backoff_ms.saturating_mul(attempt as u64) as i64,
+                            gas_used: Some(cu_limit as i64),
+                            module: Some(module_path!().to_string()),
+                            file: Some(file!().to_string()),
+                            line: Some(line!() as i64),
+                        });
+                    }
+                }
                 last_err = Some(e);
                 sleep(Duration::from_millis(
                     backoff_ms.saturating_mul(attempt as u64),

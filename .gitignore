@@ -3,3 +3,7 @@
 wallets/
 keeper_logs.sqlite
 .DS_Store
+
+# SQLite logs (runtime)
+data/
+!data/.gitkeep

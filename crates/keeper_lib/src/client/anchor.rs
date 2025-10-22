@@ -9,14 +9,19 @@ use solana_sdk::{
     signature::{Keypair, Signature, Signer},
 };
 
+use crate::storage::sqlite::{TxContext, clear_tx_context, set_tx_context};
 use crate::{
     client::rpc::{Rpc, send_tx_with_retry},
     pda::{
         derive_asset_pda, derive_bet_pda, derive_config_pda, derive_group_asset_pda,
         derive_round_pda,
     },
-    types::{AssetAccount, ConfigAccount, GroupAssetAccount, MarketType, RoundAccount},
+    types::{
+        asset_account::AssetAccount, config_account::ConfigAccount, enums::MarketType,
+        group_asset_account::GroupAssetAccount, round_account::RoundAccount,
+    },
 };
+use tracing::{debug, info};
 
 /// Generate a 8-byte sighash for a global instruction
 fn sighash_global(ix_name: &str) -> [u8; 8] {
@@ -225,19 +230,19 @@ pub fn capture_start_price(
 
     let data = sighash_global("capture_start_price").to_vec();
 
-    println!("capturing start price for round {}", round_pda);
+    info!(round_pda = %round_pda, "capturing start price");
 
     for group_id in 1..=round.total_groups {
         let group_asset_pda = derive_group_asset_pda(program_id, round_pda, group_id);
-        println!("capturing start price for group {}", group_asset_pda);
+        debug!(group_asset_pda = %group_asset_pda, "capturing start price for group");
         let group_asset = get_group_asset_account(rpc.client(), program_id, &group_asset_pda)?;
         if group_asset.total_assets < 1 {
-            println!("group {} has no assets", group_id);
+            debug!(group_id, "group has no assets");
             continue;
         }
 
         if group_asset.captured_start_price_assets == group_asset.total_assets {
-            println!("group {} already captured start price", group_id);
+            debug!(group_id, "group already captured start price");
             continue;
         }
 
@@ -255,9 +260,9 @@ pub fn capture_start_price(
         let mut start_asset = 1usize;
         while start_asset <= total_assets {
             let end_asset = (start_asset + max_assets_per_batch - 1).min(total_assets);
-            println!(
-                "capturing start price for assets from {} to {} in batch of {}",
-                start_asset, end_asset, max_assets_per_batch
+            debug!(
+                start_asset,
+                end_asset, max_assets_per_batch, "capturing start price assets chunk"
             );
 
             let mut remaining_accounts: Vec<AccountMeta> =
@@ -290,11 +295,17 @@ pub fn capture_start_price(
                 program_id: *program_id,
             };
 
+            set_tx_context(TxContext {
+                keeper_type: "start".into(),
+                op: "capture_start_price_assets_chunk".into(),
+                round_id: Some(round.id as i64),
+                group_id: Some(group_id as i64),
+                range_start: Some(start_asset as i64),
+                range_end: Some(end_asset as i64),
+            });
             let sig = send_tx_with_retry(&rpc, payer, [instruction].to_vec())?;
-            println!(
-                "captured start price for assets from {} to {}: {}",
-                start_asset, end_asset, sig
-            );
+            clear_tx_context();
+            debug!(start_asset, end_asset, tx_sig = %sig, "captured start price assets chunk");
             sigs.push(sig);
 
             start_asset = end_asset.saturating_add(1);
@@ -328,24 +339,24 @@ pub fn finalize_start_group_assets(
 
     let data = sighash_global("finalize_start_group_asset").to_vec();
 
-    println!("finalizing start group assets for round {}", round_pda);
+    info!(round_pda = %round_pda, "finalizing start group assets");
 
     for group_id in 1..=round.total_groups {
         let group_asset_pda = derive_group_asset_pda(program_id, round_pda, group_id);
         let group_asset = get_group_asset_account(rpc.client(), program_id, &group_asset_pda)?;
 
         if group_asset.total_assets < 1 {
-            println!("group {} has no assets", group_id);
+            debug!(group_id, "group has no assets");
             continue;
         }
 
         if group_asset.captured_start_price_assets != group_asset.total_assets {
-            println!("group {} has not captured start price", group_id);
+            debug!(group_id, "group has not captured start price");
             continue;
         }
 
         if group_asset.finalized_start_price_assets == group_asset.total_assets {
-            println!("group {} already finalized start price", group_id);
+            debug!(group_id, "group already finalized start price");
             continue;
         }
 
@@ -353,9 +364,9 @@ pub fn finalize_start_group_assets(
         let mut start_asset = 1usize;
         while start_asset <= total_assets {
             let end_asset = (start_asset + max_remaining_accounts - 1).min(total_assets);
-            println!(
-                "finalizing end group assets from {} to {} in batch of {}",
-                start_asset, end_asset, max_remaining_accounts
+            debug!(
+                start_asset,
+                end_asset, max_remaining_accounts, "finalizing start group assets chunk"
             );
 
             let mut remaining_accounts: Vec<AccountMeta> =
@@ -386,11 +397,17 @@ pub fn finalize_start_group_assets(
                 program_id: *program_id,
             };
 
+            set_tx_context(TxContext {
+                keeper_type: "start".into(),
+                op: "finalize_start_group_assets_chunk".into(),
+                round_id: Some(round.id as i64),
+                group_id: Some(group_id as i64),
+                range_start: Some(start_asset as i64),
+                range_end: Some(end_asset as i64),
+            });
             let sig = send_tx_with_retry(&rpc, payer, [instruction].to_vec())?;
-            println!(
-                "finalize_start_group_assets for group {}: {}",
-                group_id, sig
-            );
+            clear_tx_context();
+            debug!(group_id, tx_sig = %sig, "finalize_start_group_assets chunk");
             sigs.push(sig);
 
             start_asset = end_asset.saturating_add(1);
@@ -428,7 +445,7 @@ pub fn finalize_start_groups(
 
     let data = sighash_global("finalize_start_groups").to_vec();
 
-    println!("finalizing start groups for round {}", round_pda);
+    info!(round_pda = %round_pda, "finalizing start groups");
 
     let base_accounts = vec![
         AccountMeta::new(payer.pubkey(), true),
@@ -441,9 +458,9 @@ pub fn finalize_start_groups(
     let mut start_group = 1usize;
     while start_group <= total_groups {
         let end_group = (start_group + max_remaining_accounts - 1).min(total_groups);
-        println!(
-            "finalizing start groups from {} to {} in batch of {}",
-            start_group, end_group, max_remaining_accounts
+        debug!(
+            start_group,
+            end_group, max_remaining_accounts, "finalizing start groups chunk"
         );
 
         let mut remaining_accounts: Vec<AccountMeta> = Vec::new();
@@ -452,7 +469,7 @@ pub fn finalize_start_groups(
             let group_asset_pda = derive_group_asset_pda(program_id, round_pda, group_id as u64);
             let group = get_group_asset_account(rpc.client(), program_id, &group_asset_pda)?;
             if group.total_assets == 0 {
-                println!("group {} has no assets", group_id);
+                debug!(group_id, "group has no assets");
                 continue;
             }
 
@@ -463,7 +480,7 @@ pub fn finalize_start_groups(
             });
         }
         if remaining_accounts.is_empty() {
-            println!("no groups to finalize");
+            debug!("no groups to finalize");
             start_group = end_group.saturating_add(1);
             continue;
         }
@@ -478,11 +495,17 @@ pub fn finalize_start_groups(
             program_id: *program_id,
         };
 
+        set_tx_context(TxContext {
+            keeper_type: "start".into(),
+            op: "finalize_start_groups_chunk".into(),
+            round_id: Some(round.id as i64),
+            group_id: None,
+            range_start: Some(start_group as i64),
+            range_end: Some(end_group as i64),
+        });
         let sig = send_tx_with_retry(&rpc, payer, [instruction].to_vec())?;
-        println!(
-            "finalized start groups from {} to {}: {}",
-            start_group, end_group, sig
-        );
+        clear_tx_context();
+        debug!(start_group, end_group, tx_sig = %sig, "finalized start groups chunk");
         sigs.push(sig);
 
         start_group = end_group.saturating_add(1);
@@ -534,7 +557,17 @@ pub fn settle_single_round(
             accounts: base_accounts(),
             program_id: *program_id,
         };
+        set_tx_context(TxContext {
+            keeper_type: "settle".into(),
+            op: "settle_single_bets_chunk".into(),
+            round_id: Some(round.id as i64),
+            group_id: None,
+            range_start: None,
+            range_end: None,
+        });
         let sig = send_tx_with_retry(&rpc, payer, [instruction].to_vec())?;
+        clear_tx_context();
+        info!(round_id = %round.id, "settled single round (no bets)");
         return Ok(sig);
     }
 
@@ -544,7 +577,7 @@ pub fn settle_single_round(
     let mut start = 1usize;
     while start <= total {
         let end = (start + max_remaining_accounts - 1).min(total);
-        println!("settling bets from {} to {}", start, end);
+        debug!(start, end, "settling bets chunk");
 
         let mut remaining_accounts: Vec<AccountMeta> = Vec::with_capacity(end - start + 1);
         for bet_id in start..=end {
@@ -569,7 +602,7 @@ pub fn settle_single_round(
 
         let sig = send_tx_with_retry(&rpc, payer, [instruction].to_vec())?;
         last_sig = Some(sig);
-        println!("settled bets from {} to {} with sig {}", start, end, sig);
+        debug!(start, end, tx_sig = %sig, "settled bets chunk");
 
         start = end.saturating_add(1);
     }
@@ -602,18 +635,18 @@ pub fn capture_end_price(
 
     let data = sighash_global("capture_end_price").to_vec();
 
-    println!("capturing end price for round {}", round_pda);
+    info!(round_pda = %round_pda, "capturing end price");
 
     for group_id in 1..=round.total_groups {
         let group_asset_pda = derive_group_asset_pda(program_id, round_pda, group_id);
-        println!("capturing end price for group {}", group_asset_pda);
+        debug!(group_asset_pda = %group_asset_pda, "capturing end price for group");
         let group_asset = get_group_asset_account(rpc.client(), program_id, &group_asset_pda)?;
         if group_asset.total_assets < 1 {
-            println!("group {} has no assets", group_id);
+            debug!(group_id, "group has no assets");
             continue;
         }
         if group_asset.captured_end_price_assets == group_asset.total_assets {
-            println!("group {} already captured end price", group_id);
+            debug!(group_id, "group already captured end price");
             continue;
         }
 
@@ -631,9 +664,9 @@ pub fn capture_end_price(
         let mut start_asset = 1usize;
         while start_asset <= total_assets {
             let end_asset = (start_asset + max_assets_per_batch - 1).min(total_assets);
-            println!(
-                "capturing end price for assets from {} to {} in batch of {}",
-                start_asset, end_asset, max_assets_per_batch
+            debug!(
+                start_asset,
+                end_asset, max_assets_per_batch, "capturing end price assets chunk"
             );
 
             let mut remaining_accounts: Vec<AccountMeta> =
@@ -666,11 +699,17 @@ pub fn capture_end_price(
                 program_id: *program_id,
             };
 
+            set_tx_context(TxContext {
+                keeper_type: "settle".into(),
+                op: "capture_end_price_assets_chunk".into(),
+                round_id: Some(round.id as i64),
+                group_id: Some(group_id as i64),
+                range_start: Some(start_asset as i64),
+                range_end: Some(end_asset as i64),
+            });
             let sig = send_tx_with_retry(&rpc, payer, [instruction].to_vec())?;
-            println!(
-                "captured end price for assets from {} to {}: {}",
-                start_asset, end_asset, sig
-            );
+            clear_tx_context();
+            debug!(start_asset, end_asset, tx_sig = %sig, "captured end price assets chunk");
             sigs.push(sig);
 
             start_asset = end_asset.saturating_add(1);
@@ -704,24 +743,24 @@ pub fn finalize_end_group_assets(
 
     let data = sighash_global("finalize_end_group_asset").to_vec();
 
-    println!("finalizing end group assets for round {}", round_pda);
+    info!(round_pda = %round_pda, "finalizing end group assets");
 
     for group_id in 1..=round.total_groups {
         let group_asset_pda = derive_group_asset_pda(program_id, round_pda, group_id);
         let group_asset = get_group_asset_account(rpc.client(), program_id, &group_asset_pda)?;
 
         if group_asset.total_assets < 1 {
-            println!("group {} has no assets", group_id);
+            debug!(group_id, "group has no assets");
             continue;
         }
 
         if group_asset.captured_end_price_assets != group_asset.total_assets {
-            println!("group {} has not captured end price", group_id);
+            debug!(group_id, "group has not captured end price");
             continue;
         }
 
         if group_asset.finalized_end_price_assets == group_asset.total_assets {
-            println!("group {} already finalized end price", group_id);
+            debug!(group_id, "group already finalized end price");
             continue;
         }
 
@@ -729,9 +768,9 @@ pub fn finalize_end_group_assets(
         let mut start_asset = 1usize;
         while start_asset <= total_assets {
             let end_asset = (start_asset + max_remaining_accounts - 1).min(total_assets);
-            println!(
-                "finalizing end group assets from {} to {} in batch of {}",
-                start_asset, end_asset, max_remaining_accounts
+            debug!(
+                start_asset,
+                end_asset, max_remaining_accounts, "finalizing end group assets chunk"
             );
 
             let mut remaining_accounts: Vec<AccountMeta> =
@@ -762,11 +801,17 @@ pub fn finalize_end_group_assets(
                 program_id: *program_id,
             };
 
+            set_tx_context(TxContext {
+                keeper_type: "settle".into(),
+                op: "finalize_end_group_assets_chunk".into(),
+                round_id: Some(round.id as i64),
+                group_id: Some(group_id as i64),
+                range_start: Some(start_asset as i64),
+                range_end: Some(end_asset as i64),
+            });
             let sig = send_tx_with_retry(&rpc, payer, [instruction].to_vec())?;
-            println!(
-                "finalized end group assets from {} to {}: {}",
-                start_asset, end_asset, sig
-            );
+            clear_tx_context();
+            debug!(start_asset, end_asset, tx_sig = %sig, "finalized end group assets chunk");
             sigs.push(sig);
 
             start_asset = end_asset.saturating_add(1);
@@ -804,7 +849,7 @@ pub fn finalize_end_groups(
 
     let data = sighash_global("finalize_end_groups").to_vec();
 
-    println!("finalizing end groups for round {}", round_pda);
+    info!(round_pda = %round_pda, "finalizing end groups");
 
     let base_accounts = vec![
         AccountMeta::new(payer.pubkey(), true),
@@ -817,9 +862,9 @@ pub fn finalize_end_groups(
     let mut start_group = 1usize;
     while start_group <= total_groups {
         let end_group = (start_group + max_remaining_accounts - 1).min(total_groups);
-        println!(
-            "finalizing end groups from {} to {} in batch of {}",
-            start_group, end_group, max_remaining_accounts
+        debug!(
+            start_group,
+            end_group, max_remaining_accounts, "finalizing end groups chunk"
         );
 
         let mut remaining_accounts: Vec<AccountMeta> = Vec::new();
@@ -828,7 +873,7 @@ pub fn finalize_end_groups(
             let group_asset_pda = derive_group_asset_pda(program_id, round_pda, group_id as u64);
             let group = get_group_asset_account(rpc.client(), program_id, &group_asset_pda)?;
             if group.total_assets == 0 {
-                println!("group {} has no assets", group_id);
+                debug!(group_id, "group has no assets");
                 continue;
             }
 
@@ -839,7 +884,7 @@ pub fn finalize_end_groups(
             });
         }
         if remaining_accounts.is_empty() {
-            println!("no groups to finalize");
+            debug!("no groups to finalize");
             start_group = end_group.saturating_add(1);
             continue;
         }
@@ -854,11 +899,17 @@ pub fn finalize_end_groups(
             program_id: *program_id,
         };
 
+        set_tx_context(TxContext {
+            keeper_type: "settle".into(),
+            op: "finalize_end_groups_chunk".into(),
+            round_id: Some(round.id as i64),
+            group_id: None,
+            range_start: Some(start_group as i64),
+            range_end: Some(end_group as i64),
+        });
         let sig = send_tx_with_retry(&rpc, payer, [instruction].to_vec())?;
-        println!(
-            "finalized end groups from {} to {}: {}",
-            start_group, end_group, sig
-        );
+        clear_tx_context();
+        debug!(start_group, end_group, tx_sig = %sig, "finalized end groups chunk");
         sigs.push(sig);
 
         start_group = end_group.saturating_add(1);
@@ -886,7 +937,7 @@ pub fn settle_group_round(
 
     let data = sighash_global("settle_group_round").to_vec();
 
-    println!("settling group round {}", round_pda);
+    info!(round_pda = %round_pda, "settling group round");
 
     let base_accounts = || -> Vec<AccountMeta> {
         vec![
@@ -912,7 +963,17 @@ pub fn settle_group_round(
             accounts: base_accounts(),
             program_id: *program_id,
         };
+        set_tx_context(TxContext {
+            keeper_type: "settle".into(),
+            op: "settle_group_bets_chunk".into(),
+            round_id: Some(round.id as i64),
+            group_id: None,
+            range_start: None,
+            range_end: None,
+        });
         let sig = send_tx_with_retry(&rpc, payer, [instruction].to_vec())?;
+        clear_tx_context();
+        info!(round_id = %round.id, "settled group round (no bets)");
         sigs.push(sig);
 
         return Ok(sigs);
@@ -922,7 +983,7 @@ pub fn settle_group_round(
     let mut start = 1usize;
     while start <= total {
         let end = (start + max_remaining_accounts - 1).min(total);
-        println!("settling bets from {} to {}", start, end);
+        debug!(start, end, "settling bets chunk");
 
         let mut remaining_accounts: Vec<AccountMeta> = Vec::with_capacity(end - start + 1);
         for bet_id in start..=end {
@@ -947,7 +1008,7 @@ pub fn settle_group_round(
 
         let sig = send_tx_with_retry(&rpc, payer, [instruction].to_vec())?;
         sigs.push(sig);
-        println!("settled bets from {} to {} with sig {}", start, end, sig);
+        debug!(start, end, tx_sig = %sig, "settled bets chunk");
 
         start = end.saturating_add(1);
     }
