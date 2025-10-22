@@ -35,3 +35,16 @@ pub fn derive_bet_pda(program_id: &Pubkey, round_pda: &Pubkey, bet_id: u64) -> P
     )
     .0
 }
+
+pub fn derive_token_account_pda(
+    token_program_id: &Pubkey,
+    associated_token_program_id: &Pubkey,
+    owner: &Pubkey,
+    mint: &Pubkey,
+) -> Pubkey {
+    Pubkey::find_program_address(
+        &[owner.as_ref(), token_program_id.as_ref(), mint.as_ref()],
+        associated_token_program_id,
+    )
+    .0
+}

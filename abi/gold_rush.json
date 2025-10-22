@@ -1,1059 +1,3077 @@
 {
-    "address": "3Ut8a8pvtNBEXY3ukuQzXgHpADByembaMqeCrBiyiKXv",
-    "metadata": {
-      "name": "goldRush",
-      "version": "0.1.0",
-      "spec": "0.1.0",
-      "description": "Created with Anchor"
-    },
-    "instructions": [
-      {
-        "name": "cancelRound",
-        "discriminator": [
-          82,
-          70,
-          134,
-          54,
-          46,
-          96,
-          148,
-          8
-        ],
-        "accounts": [
-          {
-            "name": "signer",
-            "writable": true,
-            "signer": true
-          },
-          {
-            "name": "config",
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    99,
-                    111,
-                    110,
-                    102,
-                    105,
-                    103
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "round",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    114,
-                    111,
-                    117,
-                    110,
-                    100
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round.id",
-                  "account": "round"
-                }
-              ]
-            }
-          },
-          {
-            "name": "roundVault",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    118,
-                    97,
-                    117,
-                    108,
-                    116
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round"
-                }
-              ]
-            }
-          },
-          {
-            "name": "treasury"
-          },
-          {
-            "name": "tokenProgram",
-            "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
-          },
-          {
-            "name": "systemProgram",
-            "address": "11111111111111111111111111111111"
-          }
-        ],
-        "args": []
-      },
-      {
-        "name": "captureEndPrice",
-        "discriminator": [
-          116,
-          44,
-          170,
-          74,
-          105,
-          109,
-          182,
-          246
-        ],
-        "accounts": [
-          {
-            "name": "signer",
-            "writable": true,
-            "signer": true
-          },
-          {
-            "name": "config",
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    99,
-                    111,
-                    110,
-                    102,
-                    105,
-                    103
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "round",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    114,
-                    111,
-                    117,
-                    110,
-                    100
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round.id",
-                  "account": "round"
-                }
-              ]
-            }
-          },
-          {
-            "name": "groupAsset",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    103,
-                    114,
-                    111,
-                    117,
-                    112,
-                    95,
-                    97,
-                    115,
-                    115,
-                    101,
-                    116
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round"
-                },
-                {
-                  "kind": "account",
-                  "path": "group_asset.id",
-                  "account": "groupAsset"
-                }
-              ]
-            }
-          },
-          {
-            "name": "systemProgram",
-            "address": "11111111111111111111111111111111"
-          }
-        ],
-        "args": []
-      },
-      {
-        "name": "captureStartPrice",
-        "discriminator": [
-          51,
-          86,
-          229,
-          68,
-          153,
-          204,
-          34,
-          199
-        ],
-        "accounts": [
-          {
-            "name": "signer",
-            "writable": true,
-            "signer": true
-          },
-          {
-            "name": "config",
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    99,
-                    111,
-                    110,
-                    102,
-                    105,
-                    103
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "round",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    114,
-                    111,
-                    117,
-                    110,
-                    100
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round.id",
-                  "account": "round"
-                }
-              ]
-            }
-          },
-          {
-            "name": "groupAsset",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    103,
-                    114,
-                    111,
-                    117,
-                    112,
-                    95,
-                    97,
-                    115,
-                    115,
-                    101,
-                    116
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round"
-                },
-                {
-                  "kind": "account",
-                  "path": "group_asset.id",
-                  "account": "groupAsset"
-                }
-              ]
-            }
-          },
-          {
-            "name": "systemProgram",
-            "address": "11111111111111111111111111111111"
-          }
-        ],
-        "args": []
-      },
-      {
-        "name": "claimReward",
-        "discriminator": [
-          149,
-          95,
-          181,
-          242,
-          94,
-          90,
-          158,
-          162
-        ],
-        "accounts": [
-          {
-            "name": "signer",
-            "writable": true,
-            "signer": true
-          },
-          {
-            "name": "config",
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    99,
-                    111,
-                    110,
-                    102,
-                    105,
-                    103
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "round",
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    114,
-                    111,
-                    117,
-                    110,
-                    100
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round.id",
-                  "account": "round"
-                }
-              ]
-            }
-          },
-          {
-            "name": "roundVault",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    118,
-                    97,
-                    117,
-                    108,
-                    116
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round"
-                }
-              ]
-            }
-          },
-          {
-            "name": "bet",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    98,
-                    101,
-                    116
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round"
-                },
-                {
-                  "kind": "account",
-                  "path": "bet.id",
-                  "account": "bet"
-                }
-              ]
-            }
-          },
-          {
-            "name": "bettorTokenAccount",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "account",
-                  "path": "signer"
-                },
-                {
-                  "kind": "const",
-                  "value": [
-                    6,
-                    221,
-                    246,
-                    225,
-                    215,
-                    101,
-                    161,
-                    147,
-                    217,
-                    203,
-                    225,
-                    70,
-                    206,
-                    235,
-                    121,
-                    172,
-                    28,
-                    180,
-                    133,
-                    237,
-                    95,
-                    91,
-                    55,
-                    145,
-                    58,
-                    140,
-                    245,
-                    133,
-                    126,
-                    255,
-                    0,
-                    169
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "mint"
-                }
-              ],
-              "program": {
+  "address": "3Ut8a8pvtNBEXY3ukuQzXgHpADByembaMqeCrBiyiKXv",
+  "metadata": {
+    "name": "goldRush",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "cancelRound",
+      "discriminator": [
+        82,
+        70,
+        134,
+        54,
+        46,
+        96,
+        148,
+        8
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
                 "kind": "const",
                 "value": [
-                  140,
-                  151,
-                  37,
-                  143,
-                  78,
-                  36,
-                  137,
-                  241,
-                  187,
-                  61,
-                  16,
-                  41,
-                  20,
-                  142,
-                  13,
-                  131,
-                  11,
-                  90,
-                  19,
-                  153,
-                  218,
-                  255,
-                  16,
-                  132,
-                  4,
-                  142,
-                  123,
-                  216,
-                  219,
-                  233,
-                  248,
-                  89
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
                 ]
               }
-            }
-          },
-          {
-            "name": "mint"
-          },
-          {
-            "name": "tokenProgram",
-            "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
-          },
-          {
-            "name": "systemProgram",
-            "address": "11111111111111111111111111111111"
+            ]
           }
-        ],
-        "args": []
-      },
-      {
-        "name": "createRound",
-        "discriminator": [
-          229,
-          218,
-          236,
-          169,
-          231,
-          80,
-          134,
-          112
-        ],
-        "accounts": [
-          {
-            "name": "signer",
-            "writable": true,
-            "signer": true
-          },
-          {
-            "name": "config",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    99,
-                    111,
-                    110,
-                    102,
-                    105,
-                    103
-                  ]
-                }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.id",
+                "account": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "roundVault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "treasury"
+        },
+        {
+          "name": "tokenProgram",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "captureEndPrice",
+      "discriminator": [
+        116,
+        44,
+        170,
+        74,
+        105,
+        109,
+        182,
+        246
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.id",
+                "account": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "groupAsset",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  114,
+                  111,
+                  117,
+                  112,
+                  95,
+                  97,
+                  115,
+                  115,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round"
+              },
+              {
+                "kind": "account",
+                "path": "group_asset.id",
+                "account": "groupAsset"
+              }
+            ]
+          }
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "captureStartPrice",
+      "discriminator": [
+        51,
+        86,
+        229,
+        68,
+        153,
+        204,
+        34,
+        199
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.id",
+                "account": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "groupAsset",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  114,
+                  111,
+                  117,
+                  112,
+                  95,
+                  97,
+                  115,
+                  115,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round"
+              },
+              {
+                "kind": "account",
+                "path": "group_asset.id",
+                "account": "groupAsset"
+              }
+            ]
+          }
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "claimReward",
+      "discriminator": [
+        149,
+        95,
+        181,
+        242,
+        94,
+        90,
+        158,
+        162
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.id",
+                "account": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "roundVault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "bet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round"
+              },
+              {
+                "kind": "account",
+                "path": "bet.id",
+                "account": "bet"
+              }
+            ]
+          }
+        },
+        {
+          "name": "bettorTokenAccount",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "signer"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
               ]
             }
+          }
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "tokenProgram",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "createRound",
+      "discriminator": [
+        229,
+        218,
+        236,
+        169,
+        231,
+        80,
+        134,
+        112
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "tokenProgram",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "marketType",
+          "type": {
+            "defined": {
+              "name": "marketType"
+            }
+          }
+        },
+        {
+          "name": "startTime",
+          "type": "i64"
+        },
+        {
+          "name": "endTime",
+          "type": "i64"
+        }
+      ]
+    },
+    {
+      "name": "emergencyPause",
+      "discriminator": [
+        21,
+        143,
+        27,
+        142,
+        200,
+        181,
+        210,
+        255
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "emergencyUnpause",
+      "discriminator": [
+        83,
+        249,
+        195,
+        57,
+        206,
+        189,
+        31,
+        85
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "finalizeEndGroupAsset",
+      "discriminator": [
+        11,
+        196,
+        212,
+        158,
+        225,
+        111,
+        94,
+        122
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.id",
+                "account": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "groupAsset",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  114,
+                  111,
+                  117,
+                  112,
+                  95,
+                  97,
+                  115,
+                  115,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round"
+              },
+              {
+                "kind": "account",
+                "path": "group_asset.id",
+                "account": "groupAsset"
+              }
+            ]
+          }
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "finalizeEndGroups",
+      "discriminator": [
+        135,
+        108,
+        53,
+        26,
+        184,
+        143,
+        250,
+        65
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.id",
+                "account": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "finalizeStartGroupAsset",
+      "discriminator": [
+        122,
+        206,
+        104,
+        17,
+        125,
+        66,
+        221,
+        196
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.id",
+                "account": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "groupAsset",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  114,
+                  111,
+                  117,
+                  112,
+                  95,
+                  97,
+                  115,
+                  115,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round"
+              },
+              {
+                "kind": "account",
+                "path": "group_asset.id",
+                "account": "groupAsset"
+              }
+            ]
+          }
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "finalizeStartGroups",
+      "discriminator": [
+        56,
+        19,
+        3,
+        166,
+        223,
+        164,
+        105,
+        30
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.id",
+                "account": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "initialize",
+      "discriminator": [
+        175,
+        175,
+        109,
+        31,
+        13,
+        152,
+        155,
+        237
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "keeperAuthorities",
+          "type": {
+            "vec": "pubkey"
+          }
+        },
+        {
+          "name": "tokenMint",
+          "type": "pubkey"
+        },
+        {
+          "name": "treasury",
+          "type": "pubkey"
+        },
+        {
+          "name": "singleAssetFeedId",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "maxPriceUpdateAgeSecs",
+          "type": "u64"
+        },
+        {
+          "name": "feeSingleAssetBps",
+          "type": "u16"
+        },
+        {
+          "name": "feeGroupBattleBps",
+          "type": "u16"
+        },
+        {
+          "name": "minBetAmount",
+          "type": "u64"
+        },
+        {
+          "name": "betCutoffWindowSecs",
+          "type": "i64"
+        },
+        {
+          "name": "minTimeFactorBps",
+          "type": "u16"
+        },
+        {
+          "name": "maxTimeFactorBps",
+          "type": "u16"
+        },
+        {
+          "name": "defaultDirectionFactorBps",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "insertAsset",
+      "discriminator": [
+        190,
+        133,
+        160,
+        163,
+        45,
+        85,
+        168,
+        161
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.id",
+                "account": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "groupAsset",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  103,
+                  114,
+                  111,
+                  117,
+                  112,
+                  95,
+                  97,
+                  115,
+                  115,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round"
+              },
+              {
+                "kind": "account",
+                "path": "group_asset.id",
+                "account": "groupAsset"
+              }
+            ]
+          }
+        },
+        {
+          "name": "asset",
+          "writable": true
+        },
+        {
+          "name": "feedPriceAccount"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "symbol",
+          "type": {
+            "array": [
+              "u8",
+              8
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "insertGroupAsset",
+      "discriminator": [
+        216,
+        166,
+        209,
+        92,
+        245,
+        228,
+        53,
+        67
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.id",
+                "account": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "groupAsset",
+          "writable": true
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "symbol",
+          "type": {
+            "array": [
+              "u8",
+              8
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "placeBet",
+      "discriminator": [
+        222,
+        62,
+        67,
+        220,
+        63,
+        166,
+        126,
+        33
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.id",
+                "account": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "groupAsset",
+          "optional": true
+        },
+        {
+          "name": "bet",
+          "writable": true
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "tokenAccount",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "signer"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "tokenProgram",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "direction",
+          "type": {
+            "defined": {
+              "name": "betDirection"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "programPause",
+      "discriminator": [
+        181,
+        208,
+        170,
+        190,
+        72,
+        195,
+        230,
+        153
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "programUnpause",
+      "discriminator": [
+        40,
+        67,
+        64,
+        22,
+        106,
+        172,
+        128,
+        185
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "settleGroupRound",
+      "discriminator": [
+        117,
+        63,
+        7,
+        4,
+        247,
+        239,
+        50,
+        135
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.id",
+                "account": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "roundVault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "treasury"
+        },
+        {
+          "name": "treasuryTokenAccount",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "treasury"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "tokenProgram",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "associatedTokenProgram",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "settleSingleRound",
+      "discriminator": [
+        136,
+        196,
+        251,
+        236,
+        219,
+        255,
+        108,
+        43
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.id",
+                "account": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "roundVault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "priceUpdate"
+        },
+        {
+          "name": "treasury"
+        },
+        {
+          "name": "treasuryTokenAccount",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "treasury"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "tokenProgram",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "associatedTokenProgram",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "startRound",
+      "discriminator": [
+        144,
+        144,
+        43,
+        7,
+        193,
+        42,
+        217,
+        215
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.id",
+                "account": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "priceUpdate",
+          "optional": true
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "updateConfig",
+      "discriminator": [
+        29,
+        158,
+        252,
+        191,
+        10,
+        83,
+        219,
+        99
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "newAdmin",
+          "type": {
+            "option": "pubkey"
+          }
+        },
+        {
+          "name": "newKeeperAuthorities",
+          "type": {
+            "option": {
+              "vec": "pubkey"
+            }
+          }
+        },
+        {
+          "name": "newTokenMint",
+          "type": {
+            "option": "pubkey"
+          }
+        },
+        {
+          "name": "newTreasury",
+          "type": {
+            "option": "pubkey"
+          }
+        },
+        {
+          "name": "newSingleAssetFeedId",
+          "type": {
+            "option": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          }
+        },
+        {
+          "name": "newMaxPriceUpdateAgeSecs",
+          "type": {
+            "option": "u64"
+          }
+        },
+        {
+          "name": "newFeeSingleAssetBps",
+          "type": {
+            "option": "u16"
+          }
+        },
+        {
+          "name": "newFeeGroupBattleBps",
+          "type": {
+            "option": "u16"
+          }
+        },
+        {
+          "name": "newMinBetAmount",
+          "type": {
+            "option": "u64"
+          }
+        },
+        {
+          "name": "newBetCutoffWindowSecs",
+          "type": {
+            "option": "i64"
+          }
+        }
+      ]
+    },
+    {
+      "name": "withdrawBet",
+      "discriminator": [
+        130,
+        82,
+        224,
+        113,
+        128,
+        116,
+        196,
+        196
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "round",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  111,
+                  117,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round.id",
+                "account": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "bet",
+          "writable": true
+        },
+        {
+          "name": "roundVault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "bettorTokenAccount",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "signer"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "tokenProgram",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "asset",
+      "discriminator": [
+        234,
+        180,
+        241,
+        252,
+        139,
+        224,
+        160,
+        8
+      ]
+    },
+    {
+      "name": "bet",
+      "discriminator": [
+        147,
+        23,
+        35,
+        59,
+        15,
+        75,
+        155,
+        32
+      ]
+    },
+    {
+      "name": "config",
+      "discriminator": [
+        155,
+        12,
+        170,
+        224,
+        30,
+        250,
+        204,
+        130
+      ]
+    },
+    {
+      "name": "groupAsset",
+      "discriminator": [
+        92,
+        124,
+        226,
+        175,
+        188,
+        29,
+        0,
+        15
+      ]
+    },
+    {
+      "name": "priceUpdateV2",
+      "discriminator": [
+        34,
+        241,
+        35,
+        99,
+        157,
+        126,
+        244,
+        205
+      ]
+    },
+    {
+      "name": "round",
+      "discriminator": [
+        87,
+        127,
+        165,
+        51,
+        73,
+        78,
+        116,
+        174
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "emergencyPaused",
+      "discriminator": [
+        97,
+        135,
+        220,
+        149,
+        143,
+        72,
+        9,
+        27
+      ]
+    },
+    {
+      "name": "emergencyUnpaused",
+      "discriminator": [
+        94,
+        218,
+        55,
+        35,
+        64,
+        239,
+        172,
+        36
+      ]
+    },
+    {
+      "name": "programPaused",
+      "discriminator": [
+        247,
+        9,
+        236,
+        38,
+        105,
+        35,
+        112,
+        115
+      ]
+    },
+    {
+      "name": "programUnpaused",
+      "discriminator": [
+        193,
+        183,
+        146,
+        52,
+        180,
+        17,
+        21,
+        26
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 10096,
+      "name": "alreadyInitialized",
+      "msg": "Config has already been initialized"
+    },
+    {
+      "code": 10097,
+      "name": "unauthorized",
+      "msg": "Unauthorized action for this account"
+    },
+    {
+      "code": 10098,
+      "name": "programPaused",
+      "msg": "Program is currently paused"
+    },
+    {
+      "code": 10099,
+      "name": "emergencyPaused",
+      "msg": "Program is in emergency pause state"
+    },
+    {
+      "code": 10100,
+      "name": "invalidRemainingAccountsLength",
+      "msg": "Invalid remaining accounts length"
+    },
+    {
+      "code": 10101,
+      "name": "invalidPriceUpdateAccountData",
+      "msg": "Invalid price update account data"
+    },
+    {
+      "code": 14192,
+      "name": "invalidFee",
+      "msg": "Fee basis points must be less than 10000"
+    },
+    {
+      "code": 14193,
+      "name": "invalidMinBetAmount",
+      "msg": "Minimum bet amount must be greater than 0"
+    },
+    {
+      "code": 14194,
+      "name": "invalidKeeperAuthorities",
+      "msg": "Keeper authorities invalid"
+    },
+    {
+      "code": 14195,
+      "name": "unauthorizedKeeper",
+      "msg": "Keeper is not authorized"
+    },
+    {
+      "code": 14196,
+      "name": "invalidTimeFactorConfig",
+      "msg": "Invalid time factor: min and max must be between 0 and 10000"
+    },
+    {
+      "code": 14197,
+      "name": "invalidTimeFactorRange",
+      "msg": "Minimum time factor must be less than or equal to maximum time factor"
+    },
+    {
+      "code": 14198,
+      "name": "invalidDirectionFactorConfig",
+      "msg": "Direction factor must be between 0 and 10000"
+    },
+    {
+      "code": 14199,
+      "name": "invalidTreasuryAuthority",
+      "msg": "Treasury authority does not match config"
+    },
+    {
+      "code": 14200,
+      "name": "invalidNewAdmin",
+      "msg": "New admin cannot be the same as the current admin"
+    },
+    {
+      "code": 14201,
+      "name": "noNewKeeperAuthorities",
+      "msg": "New keeper authorities cannot be empty"
+    },
+    {
+      "code": 14208,
+      "name": "maxKeeperAuthoritiesReached",
+      "msg": "Maximum keeper authorities reached"
+    },
+    {
+      "code": 14209,
+      "name": "invalidNewTokenMint",
+      "msg": "New token mint cannot be the same as the current token mint"
+    },
+    {
+      "code": 14210,
+      "name": "invalidNewTreasury",
+      "msg": "New treasury cannot be the same as the current treasury"
+    },
+    {
+      "code": 14211,
+      "name": "invalidNewFeeGoldPriceBps",
+      "msg": "New fee gold price basis points must be less than 10000"
+    },
+    {
+      "code": 14212,
+      "name": "invalidNewFeeStockPriceBps",
+      "msg": "New fee stock price basis points must be less than 10000"
+    },
+    {
+      "code": 14213,
+      "name": "invalidNewMinBetAmount",
+      "msg": "New minimum bet amount must be greater than 0"
+    },
+    {
+      "code": 14214,
+      "name": "alreadyPaused",
+      "msg": "Program is already paused"
+    },
+    {
+      "code": 14215,
+      "name": "notPaused",
+      "msg": "Program is not paused"
+    },
+    {
+      "code": 14216,
+      "name": "alreadyEmergencyPaused",
+      "msg": "Program is already in emergency pause"
+    },
+    {
+      "code": 14217,
+      "name": "notEmergencyPaused",
+      "msg": "Program is not in emergency pause"
+    },
+    {
+      "code": 14224,
+      "name": "invalidNewBetCutoffWindowSecs",
+      "msg": "New bet cutoff window seconds must be greater than 0"
+    },
+    {
+      "code": 18288,
+      "name": "invalidTimestamps",
+      "msg": "Invalid timestamps: start_time must be less than end_time and in the future"
+    },
+    {
+      "code": 18289,
+      "name": "roundAlreadyExists",
+      "msg": "Round with this ID already exists"
+    },
+    {
+      "code": 18290,
+      "name": "invalidRoundStatus",
+      "msg": "Invalid round status for this action"
+    },
+    {
+      "code": 18291,
+      "name": "roundNotReadyForStart",
+      "msg": "Round is not ready to be started yet"
+    },
+    {
+      "code": 18292,
+      "name": "roundNotActive",
+      "msg": "Round is not in Active status"
+    },
+    {
+      "code": 18293,
+      "name": "roundEnded",
+      "msg": "Round has ended, no more bets or withdrawals allowed"
+    },
+    {
+      "code": 18294,
+      "name": "roundNotEnded",
+      "msg": "Round has not ended yet"
+    },
+    {
+      "code": 18295,
+      "name": "roundNotReadyForSettlement",
+      "msg": "Round is not ready for settlement"
+    },
+    {
+      "code": 18296,
+      "name": "invalidAssetPrice",
+      "msg": "Asset price must be greater than 0"
+    },
+    {
+      "code": 18297,
+      "name": "invalidDuration",
+      "msg": "Round duration is invalid"
+    },
+    {
+      "code": 18304,
+      "name": "maxAssetsReached",
+      "msg": "Max assets reached"
+    },
+    {
+      "code": 18305,
+      "name": "invalidRoundMarketType",
+      "msg": "Invalid round market type"
+    },
+    {
+      "code": 18306,
+      "name": "assetStartPriceNotSet",
+      "msg": "Asset start price is not set"
+    },
+    {
+      "code": 18307,
+      "name": "roundNotCapturedStartPrice",
+      "msg": "Round has not captured all start price of the assets in the group"
+    },
+    {
+      "code": 22384,
+      "name": "betBelowMinimum",
+      "msg": "Bet amount is below minimum required"
+    },
+    {
+      "code": 22385,
+      "name": "invalidBetStatus",
+      "msg": "Invalid bet status for this action"
+    },
+    {
+      "code": 22386,
+      "name": "betNotWon",
+      "msg": "Bet did not win, cannot claim reward"
+    },
+    {
+      "code": 22387,
+      "name": "alreadyClaimed",
+      "msg": "Reward has already been claimed"
+    },
+    {
+      "code": 22388,
+      "name": "noBetsPlaced",
+      "msg": "No bets have been placed in this round"
+    },
+    {
+      "code": 26480,
+      "name": "oracleError",
+      "msg": "Error retrieving price from oracle"
+    },
+    {
+      "code": 26481,
+      "name": "settlementFailed",
+      "msg": "Settlement process failed"
+    },
+    {
+      "code": 26482,
+      "name": "insufficientVaultBalance",
+      "msg": "Vault has insufficient balance for this operation"
+    },
+    {
+      "code": 26483,
+      "name": "rewardCalculationError",
+      "msg": "Error calculating reward amount"
+    },
+    {
+      "code": 26484,
+      "name": "invalidBettorsLength",
+      "msg": "Invalid number of bettors provided"
+    },
+    {
+      "code": 26485,
+      "name": "invalidBetAccount",
+      "msg": "Invalid bet account provided"
+    },
+    {
+      "code": 26486,
+      "name": "invalidBetAccountData",
+      "msg": "Invalid bet account data provided"
+    },
+    {
+      "code": 26487,
+      "name": "serializeError",
+      "msg": "Serialization or deserialization error"
+    },
+    {
+      "code": 26488,
+      "name": "accountDataTooSmall",
+      "msg": "Account data is too small for this operation"
+    },
+    {
+      "code": 26489,
+      "name": "betNotWonOrDraw",
+      "msg": "Bet status is neither Won nor Draw"
+    },
+    {
+      "code": 26496,
+      "name": "claimPendingBet",
+      "msg": "Bet status is Pending, cannot claim reward"
+    },
+    {
+      "code": 26497,
+      "name": "claimLosingBet",
+      "msg": "Bet status is Lost, cannot claim reward"
+    },
+    {
+      "code": 26498,
+      "name": "groupAssetAlreadyCapturedStartPrice",
+      "msg": "Group asset has already been captured all start price of the assets"
+    },
+    {
+      "code": 26499,
+      "name": "groupAssetAlreadyFinalizedStartPrice",
+      "msg": "Group asset has already been finalized start price of the assets"
+    },
+    {
+      "code": 26500,
+      "name": "roundAlreadyCapturedStartPrice",
+      "msg": "Round has already been captured all start price of the assets in the group"
+    },
+    {
+      "code": 26501,
+      "name": "groupAssetNotFullyCapturedStartPrice",
+      "msg": "Group asset is not fully captured start price"
+    },
+    {
+      "code": 26502,
+      "name": "groupAssetNotFullyCapturedEndPrice",
+      "msg": "Group asset is not fully captured end price"
+    },
+    {
+      "code": 26503,
+      "name": "groupAssetAlreadyCapturedEndPrice",
+      "msg": "Group asset has already been captured end price"
+    },
+    {
+      "code": 26504,
+      "name": "groupAssetAlreadyFinalizedEndPrice",
+      "msg": "Group asset has already been finalized end price"
+    },
+    {
+      "code": 26505,
+      "name": "roundAlreadyCapturedEndPrice",
+      "msg": "Round has already been captured all end price of the assets in the group"
+    },
+    {
+      "code": 26512,
+      "name": "maxWinnerGroupIdsExceeded",
+      "msg": "Max winner group ids exceeded"
+    },
+    {
+      "code": 30576,
+      "name": "invalidTokenAccount",
+      "msg": "Invalid token account"
+    },
+    {
+      "code": 30577,
+      "name": "insufficientBalance",
+      "msg": "Insufficient balance for this bet"
+    },
+    {
+      "code": 30578,
+      "name": "invalidMint",
+      "msg": "Token mint does not match program configuration"
+    },
+    {
+      "code": 30579,
+      "name": "tokenTransferFailed",
+      "msg": "Token transfer operation failed"
+    },
+    {
+      "code": 34672,
+      "name": "overflow",
+      "msg": "Mathematical overflow detected."
+    },
+    {
+      "code": 34673,
+      "name": "underflow",
+      "msg": "Mathematical underflow detected."
+    },
+    {
+      "code": 38768,
+      "name": "invalidAssetAccount",
+      "msg": "Invalid bet account provided"
+    },
+    {
+      "code": 38769,
+      "name": "invalidAssetAccountData",
+      "msg": "Invalid asset account data provided"
+    },
+    {
+      "code": 38770,
+      "name": "pythError",
+      "msg": "Pyth error"
+    },
+    {
+      "code": 38771,
+      "name": "invalidPriceFeedAccount",
+      "msg": "Invalid price feed account"
+    },
+    {
+      "code": 38772,
+      "name": "invalidGroupAssetAccount",
+      "msg": "Invalid group asset account provided"
+    },
+    {
+      "code": 38773,
+      "name": "invalidGroupAssetAccountData",
+      "msg": "Invalid group asset account data provided"
+    }
+  ],
+  "types": [
+    {
+      "name": "asset",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "u64"
+          },
+          {
+            "name": "group",
+            "type": "pubkey"
           },
           {
             "name": "round",
-            "writable": true
+            "type": "pubkey"
           },
           {
-            "name": "vault",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    118,
-                    97,
-                    117,
-                    108,
-                    116
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round"
-                }
+            "name": "feedId",
+            "type": {
+              "array": [
+                "u8",
+                32
               ]
             }
           },
           {
-            "name": "mint"
+            "name": "symbol",
+            "type": {
+              "array": [
+                "u8",
+                8
+              ]
+            }
           },
           {
-            "name": "systemProgram",
-            "address": "11111111111111111111111111111111"
+            "name": "startPrice",
+            "type": {
+              "option": "u64"
+            }
           },
           {
-            "name": "tokenProgram",
-            "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+            "name": "finalPrice",
+            "type": {
+              "option": "u64"
+            }
+          },
+          {
+            "name": "growthRateBps",
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "createdAt",
+            "type": "i64"
+          },
+          {
+            "name": "startedPriceAt",
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "finalizedAt",
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "bump",
+            "type": "u8"
           }
-        ],
-        "args": [
+        ]
+      }
+    },
+    {
+      "name": "bet",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            "name": "marketType",
+            "name": "id",
+            "type": "u64"
+          },
+          {
+            "name": "round",
+            "type": "pubkey"
+          },
+          {
+            "name": "bettor",
+            "type": "pubkey"
+          },
+          {
+            "name": "group",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "direction",
             "type": {
               "defined": {
-                "name": "marketType"
+                "name": "betDirection"
               }
             }
           },
           {
-            "name": "startTime",
+            "name": "claimed",
+            "type": "bool"
+          },
+          {
+            "name": "weight",
+            "type": "u64"
+          },
+          {
+            "name": "status",
+            "type": {
+              "defined": {
+                "name": "betStatus"
+              }
+            }
+          },
+          {
+            "name": "createdAt",
             "type": "i64"
           },
           {
-            "name": "endTime",
-            "type": "i64"
+            "name": "bump",
+            "type": "u8"
           }
         ]
-      },
-      {
-        "name": "emergencyPause",
-        "discriminator": [
-          21,
-          143,
-          27,
-          142,
-          200,
-          181,
-          210,
-          255
-        ],
-        "accounts": [
+      }
+    },
+    {
+      "name": "betDirection",
+      "docs": [
+        "Enum for bet types"
+      ],
+      "type": {
+        "kind": "enum",
+        "variants": [
           {
-            "name": "signer",
-            "writable": true,
-            "signer": true
+            "name": "up"
           },
           {
-            "name": "config",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    99,
-                    111,
-                    110,
-                    102,
-                    105,
-                    103
-                  ]
-                }
-              ]
-            }
+            "name": "down"
+          },
+          {
+            "name": "percentageChangeBps",
+            "fields": [
+              "i16"
+            ]
           }
-        ],
-        "args": []
-      },
-      {
-        "name": "emergencyUnpause",
-        "discriminator": [
-          83,
-          249,
-          195,
-          57,
-          206,
-          189,
-          31,
-          85
-        ],
-        "accounts": [
+        ]
+      }
+    },
+    {
+      "name": "betStatus",
+      "docs": [
+        "Enum for bet status"
+      ],
+      "type": {
+        "kind": "enum",
+        "variants": [
           {
-            "name": "signer",
-            "writable": true,
-            "signer": true
+            "name": "pending"
           },
           {
-            "name": "config",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    99,
-                    111,
-                    110,
-                    102,
-                    105,
-                    103
-                  ]
-                }
-              ]
-            }
+            "name": "won"
+          },
+          {
+            "name": "lost"
+          },
+          {
+            "name": "draw"
           }
-        ],
-        "args": []
-      },
-      {
-        "name": "finalizeEndGroupAsset",
-        "discriminator": [
-          11,
-          196,
-          212,
-          158,
-          225,
-          111,
-          94,
-          122
-        ],
-        "accounts": [
+        ]
+      }
+    },
+    {
+      "name": "config",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            "name": "signer",
-            "writable": true,
-            "signer": true
+            "name": "admin",
+            "type": "pubkey"
           },
-          {
-            "name": "config",
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    99,
-                    111,
-                    110,
-                    102,
-                    105,
-                    103
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "round",
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    114,
-                    111,
-                    117,
-                    110,
-                    100
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round.id",
-                  "account": "round"
-                }
-              ]
-            }
-          },
-          {
-            "name": "groupAsset",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    103,
-                    114,
-                    111,
-                    117,
-                    112,
-                    95,
-                    97,
-                    115,
-                    115,
-                    101,
-                    116
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round"
-                },
-                {
-                  "kind": "account",
-                  "path": "group_asset.id",
-                  "account": "groupAsset"
-                }
-              ]
-            }
-          },
-          {
-            "name": "systemProgram",
-            "address": "11111111111111111111111111111111"
-          }
-        ],
-        "args": []
-      },
-      {
-        "name": "finalizeEndGroups",
-        "discriminator": [
-          135,
-          108,
-          53,
-          26,
-          184,
-          143,
-          250,
-          65
-        ],
-        "accounts": [
-          {
-            "name": "signer",
-            "writable": true,
-            "signer": true
-          },
-          {
-            "name": "config",
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    99,
-                    111,
-                    110,
-                    102,
-                    105,
-                    103
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "round",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    114,
-                    111,
-                    117,
-                    110,
-                    100
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round.id",
-                  "account": "round"
-                }
-              ]
-            }
-          },
-          {
-            "name": "systemProgram",
-            "address": "11111111111111111111111111111111"
-          }
-        ],
-        "args": []
-      },
-      {
-        "name": "finalizeStartGroupAsset",
-        "discriminator": [
-          122,
-          206,
-          104,
-          17,
-          125,
-          66,
-          221,
-          196
-        ],
-        "accounts": [
-          {
-            "name": "signer",
-            "writable": true,
-            "signer": true
-          },
-          {
-            "name": "config",
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    99,
-                    111,
-                    110,
-                    102,
-                    105,
-                    103
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "round",
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    114,
-                    111,
-                    117,
-                    110,
-                    100
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round.id",
-                  "account": "round"
-                }
-              ]
-            }
-          },
-          {
-            "name": "groupAsset",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    103,
-                    114,
-                    111,
-                    117,
-                    112,
-                    95,
-                    97,
-                    115,
-                    115,
-                    101,
-                    116
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round"
-                },
-                {
-                  "kind": "account",
-                  "path": "group_asset.id",
-                  "account": "groupAsset"
-                }
-              ]
-            }
-          },
-          {
-            "name": "systemProgram",
-            "address": "11111111111111111111111111111111"
-          }
-        ],
-        "args": []
-      },
-      {
-        "name": "finalizeStartGroups",
-        "discriminator": [
-          56,
-          19,
-          3,
-          166,
-          223,
-          164,
-          105,
-          30
-        ],
-        "accounts": [
-          {
-            "name": "signer",
-            "writable": true,
-            "signer": true
-          },
-          {
-            "name": "config",
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    99,
-                    111,
-                    110,
-                    102,
-                    105,
-                    103
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "round",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    114,
-                    111,
-                    117,
-                    110,
-                    100
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round.id",
-                  "account": "round"
-                }
-              ]
-            }
-          },
-          {
-            "name": "systemProgram",
-            "address": "11111111111111111111111111111111"
-          }
-        ],
-        "args": []
-      },
-      {
-        "name": "initialize",
-        "discriminator": [
-          175,
-          175,
-          109,
-          31,
-          13,
-          152,
-          155,
-          237
-        ],
-        "accounts": [
-          {
-            "name": "signer",
-            "writable": true,
-            "signer": true
-          },
-          {
-            "name": "config",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    99,
-                    111,
-                    110,
-                    102,
-                    105,
-                    103
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "systemProgram",
-            "address": "11111111111111111111111111111111"
-          }
-        ],
-        "args": [
           {
             "name": "keeperAuthorities",
             "type": {
@@ -1108,2555 +3126,532 @@
           {
             "name": "defaultDirectionFactorBps",
             "type": "u16"
-          }
-        ]
-      },
-      {
-        "name": "insertAsset",
-        "discriminator": [
-          190,
-          133,
-          160,
-          163,
-          45,
-          85,
-          168,
-          161
-        ],
-        "accounts": [
-          {
-            "name": "signer",
-            "writable": true,
-            "signer": true
           },
           {
-            "name": "config",
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    99,
-                    111,
-                    110,
-                    102,
-                    105,
-                    103
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "round",
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    114,
-                    111,
-                    117,
-                    110,
-                    100
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round.id",
-                  "account": "round"
-                }
-              ]
-            }
-          },
-          {
-            "name": "groupAsset",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    103,
-                    114,
-                    111,
-                    117,
-                    112,
-                    95,
-                    97,
-                    115,
-                    115,
-                    101,
-                    116
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round"
-                },
-                {
-                  "kind": "account",
-                  "path": "group_asset.id",
-                  "account": "groupAsset"
-                }
-              ]
-            }
-          },
-          {
-            "name": "asset",
-            "writable": true
-          },
-          {
-            "name": "feedPriceAccount"
-          },
-          {
-            "name": "systemProgram",
-            "address": "11111111111111111111111111111111"
-          }
-        ],
-        "args": [
-          {
-            "name": "symbol",
+            "name": "status",
             "type": {
-              "array": [
-                "u8",
-                8
-              ]
-            }
-          }
-        ]
-      },
-      {
-        "name": "insertGroupAsset",
-        "discriminator": [
-          216,
-          166,
-          209,
-          92,
-          245,
-          228,
-          53,
-          67
-        ],
-        "accounts": [
-          {
-            "name": "signer",
-            "writable": true,
-            "signer": true
-          },
-          {
-            "name": "config",
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    99,
-                    111,
-                    110,
-                    102,
-                    105,
-                    103
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "round",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    114,
-                    111,
-                    117,
-                    110,
-                    100
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round.id",
-                  "account": "round"
-                }
-              ]
-            }
-          },
-          {
-            "name": "groupAsset",
-            "writable": true
-          },
-          {
-            "name": "systemProgram",
-            "address": "11111111111111111111111111111111"
-          }
-        ],
-        "args": [
-          {
-            "name": "symbol",
-            "type": {
-              "array": [
-                "u8",
-                8
-              ]
-            }
-          }
-        ]
-      },
-      {
-        "name": "placeBet",
-        "discriminator": [
-          222,
-          62,
-          67,
-          220,
-          63,
-          166,
-          126,
-          33
-        ],
-        "accounts": [
-          {
-            "name": "signer",
-            "writable": true,
-            "signer": true
-          },
-          {
-            "name": "config",
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    99,
-                    111,
-                    110,
-                    102,
-                    105,
-                    103
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "round",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    114,
-                    111,
-                    117,
-                    110,
-                    100
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round.id",
-                  "account": "round"
-                }
-              ]
-            }
-          },
-          {
-            "name": "groupAsset",
-            "optional": true
-          },
-          {
-            "name": "bet",
-            "writable": true
-          },
-          {
-            "name": "vault",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    118,
-                    97,
-                    117,
-                    108,
-                    116
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round"
-                }
-              ]
-            }
-          },
-          {
-            "name": "tokenAccount",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "account",
-                  "path": "signer"
-                },
-                {
-                  "kind": "const",
-                  "value": [
-                    6,
-                    221,
-                    246,
-                    225,
-                    215,
-                    101,
-                    161,
-                    147,
-                    217,
-                    203,
-                    225,
-                    70,
-                    206,
-                    235,
-                    121,
-                    172,
-                    28,
-                    180,
-                    133,
-                    237,
-                    95,
-                    91,
-                    55,
-                    145,
-                    58,
-                    140,
-                    245,
-                    133,
-                    126,
-                    255,
-                    0,
-                    169
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "mint"
-                }
-              ],
-              "program": {
-                "kind": "const",
-                "value": [
-                  140,
-                  151,
-                  37,
-                  143,
-                  78,
-                  36,
-                  137,
-                  241,
-                  187,
-                  61,
-                  16,
-                  41,
-                  20,
-                  142,
-                  13,
-                  131,
-                  11,
-                  90,
-                  19,
-                  153,
-                  218,
-                  255,
-                  16,
-                  132,
-                  4,
-                  142,
-                  123,
-                  216,
-                  219,
-                  233,
-                  248,
-                  89
-                ]
+              "defined": {
+                "name": "programStatus"
               }
             }
           },
           {
-            "name": "mint"
-          },
-          {
-            "name": "tokenProgram",
-            "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
-          },
-          {
-            "name": "systemProgram",
-            "address": "11111111111111111111111111111111"
-          }
-        ],
-        "args": [
-          {
-            "name": "amount",
+            "name": "currentRoundCounter",
             "type": "u64"
           },
           {
-            "name": "direction",
-            "type": {
-              "defined": {
-                "name": "betDirection"
-              }
-            }
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
           }
         ]
-      },
-      {
-        "name": "programPause",
-        "discriminator": [
-          181,
-          208,
-          170,
-          190,
-          72,
-          195,
-          230,
-          153
-        ],
-        "accounts": [
+      }
+    },
+    {
+      "name": "emergencyPaused",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            "name": "signer",
-            "writable": true,
-            "signer": true
+            "name": "admin",
+            "type": "pubkey"
           },
           {
             "name": "config",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    99,
-                    111,
-                    110,
-                    102,
-                    105,
-                    103
-                  ]
-                }
-              ]
-            }
+            "type": "pubkey"
           }
-        ],
-        "args": []
-      },
-      {
-        "name": "programUnpause",
-        "discriminator": [
-          40,
-          67,
-          64,
-          22,
-          106,
-          172,
-          128,
-          185
-        ],
-        "accounts": [
+        ]
+      }
+    },
+    {
+      "name": "emergencyUnpaused",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            "name": "signer",
-            "writable": true,
-            "signer": true
+            "name": "admin",
+            "type": "pubkey"
           },
           {
             "name": "config",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    99,
-                    111,
-                    110,
-                    102,
-                    105,
-                    103
-                  ]
-                }
-              ]
-            }
+            "type": "pubkey"
           }
-        ],
-        "args": []
-      },
-      {
-        "name": "settleGroupRound",
-        "discriminator": [
-          117,
-          63,
-          7,
-          4,
-          247,
-          239,
-          50,
-          135
-        ],
-        "accounts": [
+        ]
+      }
+    },
+    {
+      "name": "groupAsset",
+      "type": {
+        "kind": "struct",
+        "fields": [
           {
-            "name": "signer",
-            "writable": true,
-            "signer": true
-          },
-          {
-            "name": "config",
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    99,
-                    111,
-                    110,
-                    102,
-                    105,
-                    103
-                  ]
-                }
-              ]
-            }
+            "name": "id",
+            "type": "u64"
           },
           {
             "name": "round",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    114,
-                    111,
-                    117,
-                    110,
-                    100
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round.id",
-                  "account": "round"
-                }
+            "type": "pubkey"
+          },
+          {
+            "name": "symbol",
+            "type": {
+              "array": [
+                "u8",
+                8
               ]
             }
           },
           {
-            "name": "roundVault",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    118,
-                    97,
-                    117,
-                    108,
-                    116
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round"
-                }
-              ]
-            }
+            "name": "totalAssets",
+            "type": "u64"
           },
           {
-            "name": "treasury"
+            "name": "totalFinalPrice",
+            "type": "u64"
           },
           {
-            "name": "treasuryTokenAccount",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "account",
-                  "path": "treasury"
-                },
-                {
-                  "kind": "const",
-                  "value": [
-                    6,
-                    221,
-                    246,
-                    225,
-                    215,
-                    101,
-                    161,
-                    147,
-                    217,
-                    203,
-                    225,
-                    70,
-                    206,
-                    235,
-                    121,
-                    172,
-                    28,
-                    180,
-                    133,
-                    237,
-                    95,
-                    91,
-                    55,
-                    145,
-                    58,
-                    140,
-                    245,
-                    133,
-                    126,
-                    255,
-                    0,
-                    169
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "mint"
-                }
-              ],
-              "program": {
-                "kind": "const",
-                "value": [
-                  140,
-                  151,
-                  37,
-                  143,
-                  78,
-                  36,
-                  137,
-                  241,
-                  187,
-                  61,
-                  16,
-                  41,
-                  20,
-                  142,
-                  13,
-                  131,
-                  11,
-                  90,
-                  19,
-                  153,
-                  218,
-                  255,
-                  16,
-                  132,
-                  4,
-                  142,
-                  123,
-                  216,
-                  219,
-                  233,
-                  248,
-                  89
-                ]
-              }
-            }
+            "name": "totalGrowthRateBps",
+            "type": "i64"
           },
           {
-            "name": "mint"
+            "name": "capturedStartPriceAssets",
+            "type": "u64"
           },
           {
-            "name": "tokenProgram",
-            "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+            "name": "capturedEndPriceAssets",
+            "type": "u64"
           },
           {
-            "name": "associatedTokenProgram",
-            "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
-          },
-          {
-            "name": "systemProgram",
-            "address": "11111111111111111111111111111111"
-          }
-        ],
-        "args": []
-      },
-      {
-        "name": "settleSingleRound",
-        "discriminator": [
-          136,
-          196,
-          251,
-          236,
-          219,
-          255,
-          108,
-          43
-        ],
-        "accounts": [
-          {
-            "name": "signer",
-            "writable": true,
-            "signer": true
-          },
-          {
-            "name": "config",
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    99,
-                    111,
-                    110,
-                    102,
-                    105,
-                    103
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "round",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    114,
-                    111,
-                    117,
-                    110,
-                    100
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round.id",
-                  "account": "round"
-                }
-              ]
-            }
-          },
-          {
-            "name": "roundVault",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    118,
-                    97,
-                    117,
-                    108,
-                    116
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round"
-                }
-              ]
-            }
-          },
-          {
-            "name": "priceUpdate"
-          },
-          {
-            "name": "treasury"
-          },
-          {
-            "name": "treasuryTokenAccount",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "account",
-                  "path": "treasury"
-                },
-                {
-                  "kind": "const",
-                  "value": [
-                    6,
-                    221,
-                    246,
-                    225,
-                    215,
-                    101,
-                    161,
-                    147,
-                    217,
-                    203,
-                    225,
-                    70,
-                    206,
-                    235,
-                    121,
-                    172,
-                    28,
-                    180,
-                    133,
-                    237,
-                    95,
-                    91,
-                    55,
-                    145,
-                    58,
-                    140,
-                    245,
-                    133,
-                    126,
-                    255,
-                    0,
-                    169
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "mint"
-                }
-              ],
-              "program": {
-                "kind": "const",
-                "value": [
-                  140,
-                  151,
-                  37,
-                  143,
-                  78,
-                  36,
-                  137,
-                  241,
-                  187,
-                  61,
-                  16,
-                  41,
-                  20,
-                  142,
-                  13,
-                  131,
-                  11,
-                  90,
-                  19,
-                  153,
-                  218,
-                  255,
-                  16,
-                  132,
-                  4,
-                  142,
-                  123,
-                  216,
-                  219,
-                  233,
-                  248,
-                  89
-                ]
-              }
-            }
-          },
-          {
-            "name": "mint"
-          },
-          {
-            "name": "tokenProgram",
-            "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
-          },
-          {
-            "name": "associatedTokenProgram",
-            "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
-          },
-          {
-            "name": "systemProgram",
-            "address": "11111111111111111111111111111111"
-          }
-        ],
-        "args": []
-      },
-      {
-        "name": "startRound",
-        "discriminator": [
-          144,
-          144,
-          43,
-          7,
-          193,
-          42,
-          217,
-          215
-        ],
-        "accounts": [
-          {
-            "name": "signer",
-            "writable": true,
-            "signer": true
-          },
-          {
-            "name": "config",
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    99,
-                    111,
-                    110,
-                    102,
-                    105,
-                    103
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "round",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    114,
-                    111,
-                    117,
-                    110,
-                    100
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round.id",
-                  "account": "round"
-                }
-              ]
-            }
-          },
-          {
-            "name": "priceUpdate",
-            "optional": true
-          },
-          {
-            "name": "systemProgram",
-            "address": "11111111111111111111111111111111"
-          }
-        ],
-        "args": []
-      },
-      {
-        "name": "updateConfig",
-        "discriminator": [
-          29,
-          158,
-          252,
-          191,
-          10,
-          83,
-          219,
-          99
-        ],
-        "accounts": [
-          {
-            "name": "signer",
-            "writable": true,
-            "signer": true
-          },
-          {
-            "name": "config",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    99,
-                    111,
-                    110,
-                    102,
-                    105,
-                    103
-                  ]
-                }
-              ]
-            }
-          }
-        ],
-        "args": [
-          {
-            "name": "newAdmin",
-            "type": {
-              "option": "pubkey"
-            }
-          },
-          {
-            "name": "newKeeperAuthorities",
-            "type": {
-              "option": {
-                "vec": "pubkey"
-              }
-            }
-          },
-          {
-            "name": "newTokenMint",
-            "type": {
-              "option": "pubkey"
-            }
-          },
-          {
-            "name": "newTreasury",
-            "type": {
-              "option": "pubkey"
-            }
-          },
-          {
-            "name": "newSingleAssetFeedId",
-            "type": {
-              "option": {
-                "array": [
-                  "u8",
-                  32
-                ]
-              }
-            }
-          },
-          {
-            "name": "newMaxPriceUpdateAgeSecs",
-            "type": {
-              "option": "u64"
-            }
-          },
-          {
-            "name": "newFeeSingleAssetBps",
-            "type": {
-              "option": "u16"
-            }
-          },
-          {
-            "name": "newFeeGroupBattleBps",
-            "type": {
-              "option": "u16"
-            }
-          },
-          {
-            "name": "newMinBetAmount",
-            "type": {
-              "option": "u64"
-            }
-          },
-          {
-            "name": "newBetCutoffWindowSecs",
+            "name": "avgGrowthRateBps",
             "type": {
               "option": "i64"
             }
+          },
+          {
+            "name": "finalizedStartPriceAssets",
+            "type": "u64"
+          },
+          {
+            "name": "finalizedEndPriceAssets",
+            "type": "u64"
+          },
+          {
+            "name": "settledAssets",
+            "type": "u64"
+          },
+          {
+            "name": "createdAt",
+            "type": "i64"
+          },
+          {
+            "name": "startPriceAt",
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "finalizedPriceAt",
+            "type": {
+              "option": "i64"
+            }
+          },
+          {
+            "name": "bump",
+            "type": "u8"
           }
         ]
-      },
-      {
-        "name": "withdrawBet",
-        "discriminator": [
-          130,
-          82,
-          224,
-          113,
-          128,
-          116,
-          196,
-          196
-        ],
-        "accounts": [
+      }
+    },
+    {
+      "name": "marketType",
+      "docs": [
+        "Enum for market types"
+      ],
+      "type": {
+        "kind": "enum",
+        "variants": [
           {
-            "name": "signer",
-            "writable": true,
-            "signer": true
+            "name": "singleAsset"
+          },
+          {
+            "name": "groupBattle"
+          }
+        ]
+      }
+    },
+    {
+      "name": "priceFeedMessage",
+      "repr": {
+        "kind": "c"
+      },
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "feedId",
+            "docs": [
+              "`FeedId` but avoid the type alias because of compatibility issues with Anchor's `idl-build` feature."
+            ],
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "price",
+            "type": "i64"
+          },
+          {
+            "name": "conf",
+            "type": "u64"
+          },
+          {
+            "name": "exponent",
+            "type": "i32"
+          },
+          {
+            "name": "publishTime",
+            "docs": [
+              "The timestamp of this price update in seconds"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "prevPublishTime",
+            "docs": [
+              "The timestamp of the previous price update. This field is intended to allow users to",
+              "identify the single unique price update for any moment in time:",
+              "for any time t, the unique update is the one such that prev_publish_time < t <= publish_time.",
+              "",
+              "Note that there may not be such an update while we are migrating to the new message-sending logic,",
+              "as some price updates on pythnet may not be sent to other chains (because the message-sending",
+              "logic may not have triggered). We can solve this problem by making the message-sending mandatory",
+              "(which we can do once publishers have migrated over).",
+              "",
+              "Additionally, this field may be equal to publish_time if the message is sent on a slot where",
+              "where the aggregation was unsuccesful. This problem will go away once all publishers have",
+              "migrated over to a recent version of pyth-agent."
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "emaPrice",
+            "type": "i64"
+          },
+          {
+            "name": "emaConf",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "priceUpdateV2",
+      "docs": [
+        "A price update account. This account is used by the Pyth Receiver program to store a verified price update from a Pyth price feed.",
+        "It contains:",
+        "- `write_authority`: The write authority for this account. This authority can close this account to reclaim rent or update the account to contain a different price update.",
+        "- `verification_level`: The [`VerificationLevel`] of this price update. This represents how many Wormhole guardian signatures have been verified for this price update.",
+        "- `price_message`: The actual price update.",
+        "- `posted_slot`: The slot at which this price update was posted."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "writeAuthority",
+            "type": "pubkey"
+          },
+          {
+            "name": "verificationLevel",
+            "type": {
+              "defined": {
+                "name": "verificationLevel"
+              }
+            }
+          },
+          {
+            "name": "priceMessage",
+            "type": {
+              "defined": {
+                "name": "priceFeedMessage"
+              }
+            }
+          },
+          {
+            "name": "postedSlot",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "programPaused",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
           },
           {
             "name": "config",
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    99,
-                    111,
-                    110,
-                    102,
-                    105,
-                    103
-                  ]
-                }
-              ]
-            }
-          },
-          {
-            "name": "round",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    114,
-                    111,
-                    117,
-                    110,
-                    100
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round.id",
-                  "account": "round"
-                }
-              ]
-            }
-          },
-          {
-            "name": "bet",
-            "writable": true
-          },
-          {
-            "name": "roundVault",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "const",
-                  "value": [
-                    118,
-                    97,
-                    117,
-                    108,
-                    116
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "round"
-                }
-              ]
-            }
-          },
-          {
-            "name": "bettorTokenAccount",
-            "writable": true,
-            "pda": {
-              "seeds": [
-                {
-                  "kind": "account",
-                  "path": "signer"
-                },
-                {
-                  "kind": "const",
-                  "value": [
-                    6,
-                    221,
-                    246,
-                    225,
-                    215,
-                    101,
-                    161,
-                    147,
-                    217,
-                    203,
-                    225,
-                    70,
-                    206,
-                    235,
-                    121,
-                    172,
-                    28,
-                    180,
-                    133,
-                    237,
-                    95,
-                    91,
-                    55,
-                    145,
-                    58,
-                    140,
-                    245,
-                    133,
-                    126,
-                    255,
-                    0,
-                    169
-                  ]
-                },
-                {
-                  "kind": "account",
-                  "path": "mint"
-                }
-              ],
-              "program": {
-                "kind": "const",
-                "value": [
-                  140,
-                  151,
-                  37,
-                  143,
-                  78,
-                  36,
-                  137,
-                  241,
-                  187,
-                  61,
-                  16,
-                  41,
-                  20,
-                  142,
-                  13,
-                  131,
-                  11,
-                  90,
-                  19,
-                  153,
-                  218,
-                  255,
-                  16,
-                  132,
-                  4,
-                  142,
-                  123,
-                  216,
-                  219,
-                  233,
-                  248,
-                  89
-                ]
-              }
-            }
-          },
-          {
-            "name": "mint"
-          },
-          {
-            "name": "tokenProgram",
-            "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
-          },
-          {
-            "name": "systemProgram",
-            "address": "11111111111111111111111111111111"
+            "type": "pubkey"
           }
-        ],
-        "args": []
-      }
-    ],
-    "accounts": [
-      {
-        "name": "asset",
-        "discriminator": [
-          234,
-          180,
-          241,
-          252,
-          139,
-          224,
-          160,
-          8
-        ]
-      },
-      {
-        "name": "bet",
-        "discriminator": [
-          147,
-          23,
-          35,
-          59,
-          15,
-          75,
-          155,
-          32
-        ]
-      },
-      {
-        "name": "config",
-        "discriminator": [
-          155,
-          12,
-          170,
-          224,
-          30,
-          250,
-          204,
-          130
-        ]
-      },
-      {
-        "name": "groupAsset",
-        "discriminator": [
-          92,
-          124,
-          226,
-          175,
-          188,
-          29,
-          0,
-          15
-        ]
-      },
-      {
-        "name": "priceUpdateV2",
-        "discriminator": [
-          34,
-          241,
-          35,
-          99,
-          157,
-          126,
-          244,
-          205
-        ]
-      },
-      {
-        "name": "round",
-        "discriminator": [
-          87,
-          127,
-          165,
-          51,
-          73,
-          78,
-          116,
-          174
         ]
       }
-    ],
-    "events": [
-      {
-        "name": "emergencyPaused",
-        "discriminator": [
-          97,
-          135,
-          220,
-          149,
-          143,
-          72,
-          9,
-          27
-        ]
-      },
-      {
-        "name": "emergencyUnpaused",
-        "discriminator": [
-          94,
-          218,
-          55,
-          35,
-          64,
-          239,
-          172,
-          36
-        ]
-      },
-      {
-        "name": "programPaused",
-        "discriminator": [
-          247,
-          9,
-          236,
-          38,
-          105,
-          35,
-          112,
-          115
-        ]
-      },
-      {
-        "name": "programUnpaused",
-        "discriminator": [
-          193,
-          183,
-          146,
-          52,
-          180,
-          17,
-          21,
-          26
+    },
+    {
+      "name": "programStatus",
+      "docs": [
+        "Enum for program status flags"
+      ],
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "active"
+          },
+          {
+            "name": "paused"
+          },
+          {
+            "name": "emergencyPaused"
+          }
         ]
       }
-    ],
-    "errors": [
-      {
-        "code": 10096,
-        "name": "alreadyInitialized",
-        "msg": "Config has already been initialized"
-      },
-      {
-        "code": 10097,
-        "name": "unauthorized",
-        "msg": "Unauthorized action for this account"
-      },
-      {
-        "code": 10098,
-        "name": "programPaused",
-        "msg": "Program is currently paused"
-      },
-      {
-        "code": 10099,
-        "name": "emergencyPaused",
-        "msg": "Program is in emergency pause state"
-      },
-      {
-        "code": 10100,
-        "name": "invalidRemainingAccountsLength",
-        "msg": "Invalid remaining accounts length"
-      },
-      {
-        "code": 10101,
-        "name": "invalidPriceUpdateAccountData",
-        "msg": "Invalid price update account data"
-      },
-      {
-        "code": 14192,
-        "name": "invalidFee",
-        "msg": "Fee basis points must be less than 10000"
-      },
-      {
-        "code": 14193,
-        "name": "invalidMinBetAmount",
-        "msg": "Minimum bet amount must be greater than 0"
-      },
-      {
-        "code": 14194,
-        "name": "invalidKeeperAuthorities",
-        "msg": "Keeper authorities invalid"
-      },
-      {
-        "code": 14195,
-        "name": "unauthorizedKeeper",
-        "msg": "Keeper is not authorized"
-      },
-      {
-        "code": 14196,
-        "name": "invalidTimeFactorConfig",
-        "msg": "Invalid time factor: min and max must be between 0 and 10000"
-      },
-      {
-        "code": 14197,
-        "name": "invalidTimeFactorRange",
-        "msg": "Minimum time factor must be less than or equal to maximum time factor"
-      },
-      {
-        "code": 14198,
-        "name": "invalidDirectionFactorConfig",
-        "msg": "Direction factor must be between 0 and 10000"
-      },
-      {
-        "code": 14199,
-        "name": "invalidTreasuryAuthority",
-        "msg": "Treasury authority does not match config"
-      },
-      {
-        "code": 14200,
-        "name": "invalidNewAdmin",
-        "msg": "New admin cannot be the same as the current admin"
-      },
-      {
-        "code": 14201,
-        "name": "noNewKeeperAuthorities",
-        "msg": "New keeper authorities cannot be empty"
-      },
-      {
-        "code": 14208,
-        "name": "maxKeeperAuthoritiesReached",
-        "msg": "Maximum keeper authorities reached"
-      },
-      {
-        "code": 14209,
-        "name": "invalidNewTokenMint",
-        "msg": "New token mint cannot be the same as the current token mint"
-      },
-      {
-        "code": 14210,
-        "name": "invalidNewTreasury",
-        "msg": "New treasury cannot be the same as the current treasury"
-      },
-      {
-        "code": 14211,
-        "name": "invalidNewFeeGoldPriceBps",
-        "msg": "New fee gold price basis points must be less than 10000"
-      },
-      {
-        "code": 14212,
-        "name": "invalidNewFeeStockPriceBps",
-        "msg": "New fee stock price basis points must be less than 10000"
-      },
-      {
-        "code": 14213,
-        "name": "invalidNewMinBetAmount",
-        "msg": "New minimum bet amount must be greater than 0"
-      },
-      {
-        "code": 14214,
-        "name": "alreadyPaused",
-        "msg": "Program is already paused"
-      },
-      {
-        "code": 14215,
-        "name": "notPaused",
-        "msg": "Program is not paused"
-      },
-      {
-        "code": 14216,
-        "name": "alreadyEmergencyPaused",
-        "msg": "Program is already in emergency pause"
-      },
-      {
-        "code": 14217,
-        "name": "notEmergencyPaused",
-        "msg": "Program is not in emergency pause"
-      },
-      {
-        "code": 14224,
-        "name": "invalidNewBetCutoffWindowSecs",
-        "msg": "New bet cutoff window seconds must be greater than 0"
-      },
-      {
-        "code": 18288,
-        "name": "invalidTimestamps",
-        "msg": "Invalid timestamps: start_time must be less than end_time and in the future"
-      },
-      {
-        "code": 18289,
-        "name": "roundAlreadyExists",
-        "msg": "Round with this ID already exists"
-      },
-      {
-        "code": 18290,
-        "name": "invalidRoundStatus",
-        "msg": "Invalid round status for this action"
-      },
-      {
-        "code": 18291,
-        "name": "roundNotReadyForStart",
-        "msg": "Round is not ready to be started yet"
-      },
-      {
-        "code": 18292,
-        "name": "roundNotActive",
-        "msg": "Round is not in Active status"
-      },
-      {
-        "code": 18293,
-        "name": "roundEnded",
-        "msg": "Round has ended, no more bets or withdrawals allowed"
-      },
-      {
-        "code": 18294,
-        "name": "roundNotEnded",
-        "msg": "Round has not ended yet"
-      },
-      {
-        "code": 18295,
-        "name": "roundNotReadyForSettlement",
-        "msg": "Round is not ready for settlement"
-      },
-      {
-        "code": 18296,
-        "name": "invalidAssetPrice",
-        "msg": "Asset price must be greater than 0"
-      },
-      {
-        "code": 18297,
-        "name": "invalidDuration",
-        "msg": "Round duration is invalid"
-      },
-      {
-        "code": 18304,
-        "name": "maxAssetsReached",
-        "msg": "Max assets reached"
-      },
-      {
-        "code": 18305,
-        "name": "invalidRoundMarketType",
-        "msg": "Invalid round market type"
-      },
-      {
-        "code": 18306,
-        "name": "assetStartPriceNotSet",
-        "msg": "Asset start price is not set"
-      },
-      {
-        "code": 18307,
-        "name": "roundNotCapturedStartPrice",
-        "msg": "Round has not captured all start price of the assets in the group"
-      },
-      {
-        "code": 22384,
-        "name": "betBelowMinimum",
-        "msg": "Bet amount is below minimum required"
-      },
-      {
-        "code": 22385,
-        "name": "invalidBetStatus",
-        "msg": "Invalid bet status for this action"
-      },
-      {
-        "code": 22386,
-        "name": "betNotWon",
-        "msg": "Bet did not win, cannot claim reward"
-      },
-      {
-        "code": 22387,
-        "name": "alreadyClaimed",
-        "msg": "Reward has already been claimed"
-      },
-      {
-        "code": 22388,
-        "name": "noBetsPlaced",
-        "msg": "No bets have been placed in this round"
-      },
-      {
-        "code": 26480,
-        "name": "oracleError",
-        "msg": "Error retrieving price from oracle"
-      },
-      {
-        "code": 26481,
-        "name": "settlementFailed",
-        "msg": "Settlement process failed"
-      },
-      {
-        "code": 26482,
-        "name": "insufficientVaultBalance",
-        "msg": "Vault has insufficient balance for this operation"
-      },
-      {
-        "code": 26483,
-        "name": "rewardCalculationError",
-        "msg": "Error calculating reward amount"
-      },
-      {
-        "code": 26484,
-        "name": "invalidBettorsLength",
-        "msg": "Invalid number of bettors provided"
-      },
-      {
-        "code": 26485,
-        "name": "invalidBetAccount",
-        "msg": "Invalid bet account provided"
-      },
-      {
-        "code": 26486,
-        "name": "invalidBetAccountData",
-        "msg": "Invalid bet account data provided"
-      },
-      {
-        "code": 26487,
-        "name": "serializeError",
-        "msg": "Serialization or deserialization error"
-      },
-      {
-        "code": 26488,
-        "name": "accountDataTooSmall",
-        "msg": "Account data is too small for this operation"
-      },
-      {
-        "code": 26489,
-        "name": "betNotWonOrDraw",
-        "msg": "Bet status is neither Won nor Draw"
-      },
-      {
-        "code": 26496,
-        "name": "claimPendingBet",
-        "msg": "Bet status is Pending, cannot claim reward"
-      },
-      {
-        "code": 26497,
-        "name": "claimLosingBet",
-        "msg": "Bet status is Lost, cannot claim reward"
-      },
-      {
-        "code": 26498,
-        "name": "groupAssetAlreadyCapturedStartPrice",
-        "msg": "Group asset has already been captured all start price of the assets"
-      },
-      {
-        "code": 26499,
-        "name": "groupAssetAlreadyFinalizedStartPrice",
-        "msg": "Group asset has already been finalized start price of the assets"
-      },
-      {
-        "code": 26500,
-        "name": "roundAlreadyCapturedStartPrice",
-        "msg": "Round has already been captured all start price of the assets in the group"
-      },
-      {
-        "code": 26501,
-        "name": "groupAssetNotFullyCapturedStartPrice",
-        "msg": "Group asset is not fully captured start price"
-      },
-      {
-        "code": 26502,
-        "name": "groupAssetNotFullyCapturedEndPrice",
-        "msg": "Group asset is not fully captured end price"
-      },
-      {
-        "code": 26503,
-        "name": "groupAssetAlreadyCapturedEndPrice",
-        "msg": "Group asset has already been captured end price"
-      },
-      {
-        "code": 26504,
-        "name": "groupAssetAlreadyFinalizedEndPrice",
-        "msg": "Group asset has already been finalized end price"
-      },
-      {
-        "code": 26505,
-        "name": "roundAlreadyCapturedEndPrice",
-        "msg": "Round has already been captured all end price of the assets in the group"
-      },
-      {
-        "code": 26512,
-        "name": "maxWinnerGroupIdsExceeded",
-        "msg": "Max winner group ids exceeded"
-      },
-      {
-        "code": 26513,
-        "name": "allBetsAlreadySettled",
-        "msg": "All bets have already been settled"
-      },
-      {
-        "code": 30576,
-        "name": "invalidTokenAccount",
-        "msg": "Invalid token account"
-      },
-      {
-        "code": 30577,
-        "name": "insufficientBalance",
-        "msg": "Insufficient balance for this bet"
-      },
-      {
-        "code": 30578,
-        "name": "invalidMint",
-        "msg": "Token mint does not match program configuration"
-      },
-      {
-        "code": 30579,
-        "name": "tokenTransferFailed",
-        "msg": "Token transfer operation failed"
-      },
-      {
-        "code": 34672,
-        "name": "overflow",
-        "msg": "Mathematical overflow detected."
-      },
-      {
-        "code": 34673,
-        "name": "underflow",
-        "msg": "Mathematical underflow detected."
-      },
-      {
-        "code": 38768,
-        "name": "invalidAssetAccount",
-        "msg": "Invalid bet account provided"
-      },
-      {
-        "code": 38769,
-        "name": "invalidAssetAccountData",
-        "msg": "Invalid asset account data provided"
-      },
-      {
-        "code": 38770,
-        "name": "pythError",
-        "msg": "Pyth error"
-      },
-      {
-        "code": 38771,
-        "name": "invalidPriceFeedAccount",
-        "msg": "Invalid price feed account"
-      },
-      {
-        "code": 38772,
-        "name": "invalidGroupAssetAccount",
-        "msg": "Invalid group asset account provided"
-      },
-      {
-        "code": 38773,
-        "name": "invalidGroupAssetAccountData",
-        "msg": "Invalid group asset account data provided"
+    },
+    {
+      "name": "programUnpaused",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "config",
+            "type": "pubkey"
+          }
+        ]
       }
-    ],
-    "types": [
-      {
-        "name": "asset",
-        "type": {
-          "kind": "struct",
-          "fields": [
-            {
-              "name": "id",
-              "type": "u64"
-            },
-            {
-              "name": "group",
-              "type": "pubkey"
-            },
-            {
-              "name": "round",
-              "type": "pubkey"
-            },
-            {
-              "name": "feedId",
-              "type": {
-                "array": [
-                  "u8",
-                  32
-                ]
+    },
+    {
+      "name": "round",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "u64"
+          },
+          {
+            "name": "startTime",
+            "type": "i64"
+          },
+          {
+            "name": "endTime",
+            "type": "i64"
+          },
+          {
+            "name": "betCutoffTime",
+            "type": "i64"
+          },
+          {
+            "name": "vault",
+            "type": "pubkey"
+          },
+          {
+            "name": "vaultBump",
+            "type": "u8"
+          },
+          {
+            "name": "marketType",
+            "type": {
+              "defined": {
+                "name": "marketType"
               }
-            },
-            {
-              "name": "symbol",
-              "type": {
-                "array": [
-                  "u8",
-                  8
-                ]
-              }
-            },
-            {
-              "name": "startPrice",
-              "type": {
-                "option": "u64"
-              }
-            },
-            {
-              "name": "finalPrice",
-              "type": {
-                "option": "u64"
-              }
-            },
-            {
-              "name": "growthRateBps",
-              "type": {
-                "option": "i64"
-              }
-            },
-            {
-              "name": "createdAt",
-              "type": "i64"
-            },
-            {
-              "name": "startedPriceAt",
-              "type": {
-                "option": "i64"
-              }
-            },
-            {
-              "name": "finalizedAt",
-              "type": {
-                "option": "i64"
-              }
-            },
-            {
-              "name": "bump",
-              "type": "u8"
             }
-          ]
-        }
-      },
-      {
-        "name": "bet",
-        "type": {
-          "kind": "struct",
-          "fields": [
-            {
-              "name": "id",
-              "type": "u64"
-            },
-            {
-              "name": "round",
-              "type": "pubkey"
-            },
-            {
-              "name": "bettor",
-              "type": "pubkey"
-            },
-            {
-              "name": "group",
-              "type": {
-                "option": "pubkey"
+          },
+          {
+            "name": "status",
+            "type": {
+              "defined": {
+                "name": "roundStatus"
               }
-            },
-            {
-              "name": "amount",
-              "type": "u64"
-            },
-            {
-              "name": "direction",
-              "type": {
-                "defined": {
-                  "name": "betDirection"
-                }
-              }
-            },
-            {
-              "name": "claimed",
-              "type": "bool"
-            },
-            {
-              "name": "weight",
-              "type": "u64"
-            },
-            {
-              "name": "status",
-              "type": {
-                "defined": {
-                  "name": "betStatus"
-                }
-              }
-            },
-            {
-              "name": "createdAt",
-              "type": "i64"
-            },
-            {
-              "name": "bump",
-              "type": "u8"
             }
-          ]
-        }
-      },
-      {
-        "name": "betDirection",
-        "docs": [
-          "Enum for bet types"
-        ],
-        "type": {
-          "kind": "enum",
-          "variants": [
-            {
-              "name": "up"
-            },
-            {
-              "name": "down"
-            },
-            {
-              "name": "percentageChangeBps",
-              "fields": [
-                "i16"
-              ]
+          },
+          {
+            "name": "startPrice",
+            "type": {
+              "option": "u64"
             }
-          ]
-        }
-      },
-      {
-        "name": "betStatus",
-        "docs": [
-          "Enum for bet status"
-        ],
-        "type": {
-          "kind": "enum",
-          "variants": [
-            {
-              "name": "pending"
-            },
-            {
-              "name": "won"
-            },
-            {
-              "name": "lost"
-            },
-            {
-              "name": "draw"
+          },
+          {
+            "name": "finalPrice",
+            "type": {
+              "option": "u64"
             }
-          ]
-        }
-      },
-      {
-        "name": "config",
-        "type": {
-          "kind": "struct",
-          "fields": [
-            {
-              "name": "admin",
-              "type": "pubkey"
-            },
-            {
-              "name": "keeperAuthorities",
-              "type": {
-                "vec": "pubkey"
-              }
-            },
-            {
-              "name": "tokenMint",
-              "type": "pubkey"
-            },
-            {
-              "name": "treasury",
-              "type": "pubkey"
-            },
-            {
-              "name": "singleAssetFeedId",
-              "type": {
-                "array": [
-                  "u8",
-                  32
-                ]
-              }
-            },
-            {
-              "name": "maxPriceUpdateAgeSecs",
-              "type": "u64"
-            },
-            {
-              "name": "feeSingleAssetBps",
-              "type": "u16"
-            },
-            {
-              "name": "feeGroupBattleBps",
-              "type": "u16"
-            },
-            {
-              "name": "minBetAmount",
-              "type": "u64"
-            },
-            {
-              "name": "betCutoffWindowSecs",
-              "type": "i64"
-            },
-            {
-              "name": "minTimeFactorBps",
-              "type": "u16"
-            },
-            {
-              "name": "maxTimeFactorBps",
-              "type": "u16"
-            },
-            {
-              "name": "defaultDirectionFactorBps",
-              "type": "u16"
-            },
-            {
-              "name": "status",
-              "type": {
-                "defined": {
-                  "name": "programStatus"
-                }
-              }
-            },
-            {
-              "name": "currentRoundCounter",
-              "type": "u64"
-            },
-            {
-              "name": "version",
-              "type": "u8"
-            },
-            {
-              "name": "bump",
-              "type": "u8"
+          },
+          {
+            "name": "totalPool",
+            "type": "u64"
+          },
+          {
+            "name": "totalBets",
+            "type": "u64"
+          },
+          {
+            "name": "totalFeeCollected",
+            "type": "u64"
+          },
+          {
+            "name": "totalRewardPool",
+            "type": "u64"
+          },
+          {
+            "name": "winnersWeight",
+            "type": "u64"
+          },
+          {
+            "name": "settledBets",
+            "type": "u64"
+          },
+          {
+            "name": "cancelledBets",
+            "type": "u64"
+          },
+          {
+            "name": "winnerGroupIds",
+            "type": {
+              "vec": "u64"
             }
-          ]
-        }
-      },
-      {
-        "name": "emergencyPaused",
-        "type": {
-          "kind": "struct",
-          "fields": [
-            {
-              "name": "admin",
-              "type": "pubkey"
-            },
-            {
-              "name": "config",
-              "type": "pubkey"
+          },
+          {
+            "name": "totalGroups",
+            "type": "u64"
+          },
+          {
+            "name": "capturedStartGroups",
+            "type": "u64"
+          },
+          {
+            "name": "capturedEndGroups",
+            "type": "u64"
+          },
+          {
+            "name": "createdAt",
+            "type": "i64"
+          },
+          {
+            "name": "settledAt",
+            "type": {
+              "option": "i64"
             }
-          ]
-        }
-      },
-      {
-        "name": "emergencyUnpaused",
-        "type": {
-          "kind": "struct",
-          "fields": [
-            {
-              "name": "admin",
-              "type": "pubkey"
-            },
-            {
-              "name": "config",
-              "type": "pubkey"
-            }
-          ]
-        }
-      },
-      {
-        "name": "groupAsset",
-        "type": {
-          "kind": "struct",
-          "fields": [
-            {
-              "name": "id",
-              "type": "u64"
-            },
-            {
-              "name": "round",
-              "type": "pubkey"
-            },
-            {
-              "name": "symbol",
-              "type": {
-                "array": [
-                  "u8",
-                  8
-                ]
-              }
-            },
-            {
-              "name": "totalAssets",
-              "type": "u64"
-            },
-            {
-              "name": "totalFinalPrice",
-              "type": "u64"
-            },
-            {
-              "name": "totalGrowthRateBps",
-              "type": "i64"
-            },
-            {
-              "name": "capturedStartPriceAssets",
-              "type": "u64"
-            },
-            {
-              "name": "capturedEndPriceAssets",
-              "type": "u64"
-            },
-            {
-              "name": "avgGrowthRateBps",
-              "type": {
-                "option": "i64"
-              }
-            },
-            {
-              "name": "finalizedStartPriceAssets",
-              "type": "u64"
-            },
-            {
-              "name": "finalizedEndPriceAssets",
-              "type": "u64"
-            },
-            {
-              "name": "settledAssets",
-              "type": "u64"
-            },
-            {
-              "name": "createdAt",
-              "type": "i64"
-            },
-            {
-              "name": "startPriceAt",
-              "type": {
-                "option": "i64"
-              }
-            },
-            {
-              "name": "finalizedPriceAt",
-              "type": {
-                "option": "i64"
-              }
-            },
-            {
-              "name": "bump",
-              "type": "u8"
-            }
-          ]
-        }
-      },
-      {
-        "name": "marketType",
-        "docs": [
-          "Enum for market types"
-        ],
-        "type": {
-          "kind": "enum",
-          "variants": [
-            {
-              "name": "singleAsset"
-            },
-            {
-              "name": "groupBattle"
-            }
-          ]
-        }
-      },
-      {
-        "name": "priceFeedMessage",
-        "repr": {
-          "kind": "c"
-        },
-        "type": {
-          "kind": "struct",
-          "fields": [
-            {
-              "name": "feedId",
-              "docs": [
-                "`FeedId` but avoid the type alias because of compatibility issues with Anchor's `idl-build` feature."
-              ],
-              "type": {
-                "array": [
-                  "u8",
-                  32
-                ]
-              }
-            },
-            {
-              "name": "price",
-              "type": "i64"
-            },
-            {
-              "name": "conf",
-              "type": "u64"
-            },
-            {
-              "name": "exponent",
-              "type": "i32"
-            },
-            {
-              "name": "publishTime",
-              "docs": [
-                "The timestamp of this price update in seconds"
-              ],
-              "type": "i64"
-            },
-            {
-              "name": "prevPublishTime",
-              "docs": [
-                "The timestamp of the previous price update. This field is intended to allow users to",
-                "identify the single unique price update for any moment in time:",
-                "for any time t, the unique update is the one such that prev_publish_time < t <= publish_time.",
-                "",
-                "Note that there may not be such an update while we are migrating to the new message-sending logic,",
-                "as some price updates on pythnet may not be sent to other chains (because the message-sending",
-                "logic may not have triggered). We can solve this problem by making the message-sending mandatory",
-                "(which we can do once publishers have migrated over).",
-                "",
-                "Additionally, this field may be equal to publish_time if the message is sent on a slot where",
-                "where the aggregation was unsuccesful. This problem will go away once all publishers have",
-                "migrated over to a recent version of pyth-agent."
-              ],
-              "type": "i64"
-            },
-            {
-              "name": "emaPrice",
-              "type": "i64"
-            },
-            {
-              "name": "emaConf",
-              "type": "u64"
-            }
-          ]
-        }
-      },
-      {
-        "name": "priceUpdateV2",
-        "docs": [
-          "A price update account. This account is used by the Pyth Receiver program to store a verified price update from a Pyth price feed.",
-          "It contains:",
-          "- `write_authority`: The write authority for this account. This authority can close this account to reclaim rent or update the account to contain a different price update.",
-          "- `verification_level`: The [`VerificationLevel`] of this price update. This represents how many Wormhole guardian signatures have been verified for this price update.",
-          "- `price_message`: The actual price update.",
-          "- `posted_slot`: The slot at which this price update was posted."
-        ],
-        "type": {
-          "kind": "struct",
-          "fields": [
-            {
-              "name": "writeAuthority",
-              "type": "pubkey"
-            },
-            {
-              "name": "verificationLevel",
-              "type": {
-                "defined": {
-                  "name": "verificationLevel"
-                }
-              }
-            },
-            {
-              "name": "priceMessage",
-              "type": {
-                "defined": {
-                  "name": "priceFeedMessage"
-                }
-              }
-            },
-            {
-              "name": "postedSlot",
-              "type": "u64"
-            }
-          ]
-        }
-      },
-      {
-        "name": "programPaused",
-        "type": {
-          "kind": "struct",
-          "fields": [
-            {
-              "name": "admin",
-              "type": "pubkey"
-            },
-            {
-              "name": "config",
-              "type": "pubkey"
-            }
-          ]
-        }
-      },
-      {
-        "name": "programStatus",
-        "docs": [
-          "Enum for program status flags"
-        ],
-        "type": {
-          "kind": "enum",
-          "variants": [
-            {
-              "name": "active"
-            },
-            {
-              "name": "paused"
-            },
-            {
-              "name": "emergencyPaused"
-            }
-          ]
-        }
-      },
-      {
-        "name": "programUnpaused",
-        "type": {
-          "kind": "struct",
-          "fields": [
-            {
-              "name": "admin",
-              "type": "pubkey"
-            },
-            {
-              "name": "config",
-              "type": "pubkey"
-            }
-          ]
-        }
-      },
-      {
-        "name": "round",
-        "type": {
-          "kind": "struct",
-          "fields": [
-            {
-              "name": "id",
-              "type": "u64"
-            },
-            {
-              "name": "startTime",
-              "type": "i64"
-            },
-            {
-              "name": "endTime",
-              "type": "i64"
-            },
-            {
-              "name": "betCutoffTime",
-              "type": "i64"
-            },
-            {
-              "name": "vault",
-              "type": "pubkey"
-            },
-            {
-              "name": "vaultBump",
-              "type": "u8"
-            },
-            {
-              "name": "marketType",
-              "type": {
-                "defined": {
-                  "name": "marketType"
-                }
-              }
-            },
-            {
-              "name": "status",
-              "type": {
-                "defined": {
-                  "name": "roundStatus"
-                }
-              }
-            },
-            {
-              "name": "startPrice",
-              "type": {
-                "option": "u64"
-              }
-            },
-            {
-              "name": "finalPrice",
-              "type": {
-                "option": "u64"
-              }
-            },
-            {
-              "name": "totalPool",
-              "type": "u64"
-            },
-            {
-              "name": "totalBets",
-              "type": "u64"
-            },
-            {
-              "name": "totalFeeCollected",
-              "type": "u64"
-            },
-            {
-              "name": "totalRewardPool",
-              "type": "u64"
-            },
-            {
-              "name": "winnersWeight",
-              "type": "u64"
-            },
-            {
-              "name": "settledBets",
-              "type": "u64"
-            },
-            {
-              "name": "cancelledBets",
-              "type": "u64"
-            },
-            {
-              "name": "winnerGroupIds",
-              "type": {
-                "vec": "u64"
-              }
-            },
-            {
-              "name": "totalGroups",
-              "type": "u64"
-            },
-            {
-              "name": "capturedStartGroups",
-              "type": "u64"
-            },
-            {
-              "name": "capturedEndGroups",
-              "type": "u64"
-            },
-            {
-              "name": "createdAt",
-              "type": "i64"
-            },
-            {
-              "name": "settledAt",
-              "type": {
-                "option": "i64"
-              }
-            },
-            {
-              "name": "bump",
-              "type": "u8"
-            }
-          ]
-        }
-      },
-      {
-        "name": "roundStatus",
-        "type": {
-          "kind": "enum",
-          "variants": [
-            {
-              "name": "scheduled"
-            },
-            {
-              "name": "active"
-            },
-            {
-              "name": "cancelling"
-            },
-            {
-              "name": "pendingSettlement"
-            },
-            {
-              "name": "ended"
-            }
-          ]
-        }
-      },
-      {
-        "name": "verificationLevel",
-        "docs": [
-          "Pyth price updates are bridged to all blockchains via Wormhole.",
-          "Using the price updates on another chain requires verifying the signatures of the Wormhole guardians.",
-          "The usual process is to check the signatures for two thirds of the total number of guardians, but this can be cumbersome on Solana because of the transaction size limits,",
-          "so we also allow for partial verification.",
-          "",
-          "This enum represents how much a price update has been verified:",
-          "- If `Full`, we have verified the signatures for two thirds of the current guardians.",
-          "- If `Partial`, only `num_signatures` guardian signatures have been checked.",
-          "",
-          "# Warning",
-          "Using partially verified price updates is dangerous, as it lowers the threshold of guardians that need to collude to produce a malicious price update."
-        ],
-        "type": {
-          "kind": "enum",
-          "variants": [
-            {
-              "name": "partial",
-              "fields": [
-                {
-                  "name": "numSignatures",
-                  "type": "u8"
-                }
-              ]
-            },
-            {
-              "name": "full"
-            }
-          ]
-        }
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
       }
-    ],
-    "constants": [
-      {
-        "name": "assetSeed",
-        "type": "string",
-        "value": "\"asset\""
-      },
-      {
-        "name": "betSeed",
-        "type": "string",
-        "value": "\"bet\""
-      },
-      {
-        "name": "configSeed",
-        "docs": [
-          "PDA Seeds"
-        ],
-        "type": "string",
-        "value": "\"config\""
-      },
-      {
-        "name": "groupAssetSeed",
-        "type": "string",
-        "value": "\"group_asset\""
-      },
-      {
-        "name": "roundSeed",
-        "type": "string",
-        "value": "\"round\""
-      },
-      {
-        "name": "vaultSeed",
-        "type": "string",
-        "value": "\"vault\""
+    },
+    {
+      "name": "roundStatus",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "scheduled"
+          },
+          {
+            "name": "active"
+          },
+          {
+            "name": "cancelling"
+          },
+          {
+            "name": "pendingSettlement"
+          },
+          {
+            "name": "ended"
+          }
+        ]
       }
-    ]
-  }
+    },
+    {
+      "name": "verificationLevel",
+      "docs": [
+        "Pyth price updates are bridged to all blockchains via Wormhole.",
+        "Using the price updates on another chain requires verifying the signatures of the Wormhole guardians.",
+        "The usual process is to check the signatures for two thirds of the total number of guardians, but this can be cumbersome on Solana because of the transaction size limits,",
+        "so we also allow for partial verification.",
+        "",
+        "This enum represents how much a price update has been verified:",
+        "- If `Full`, we have verified the signatures for two thirds of the current guardians.",
+        "- If `Partial`, only `num_signatures` guardian signatures have been checked.",
+        "",
+        "# Warning",
+        "Using partially verified price updates is dangerous, as it lowers the threshold of guardians that need to collude to produce a malicious price update."
+      ],
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "partial",
+            "fields": [
+              {
+                "name": "numSignatures",
+                "type": "u8"
+              }
+            ]
+          },
+          {
+            "name": "full"
+          }
+        ]
+      }
+    }
+  ],
+  "constants": [
+    {
+      "name": "assetSeed",
+      "type": "string",
+      "value": "\"asset\""
+    },
+    {
+      "name": "betSeed",
+      "type": "string",
+      "value": "\"bet\""
+    },
+    {
+      "name": "configSeed",
+      "docs": [
+        "PDA Seeds"
+      ],
+      "type": "string",
+      "value": "\"config\""
+    },
+    {
+      "name": "groupAssetSeed",
+      "type": "string",
+      "value": "\"group_asset\""
+    },
+    {
+      "name": "roundSeed",
+      "type": "string",
+      "value": "\"round\""
+    },
+    {
+      "name": "vaultSeed",
+      "type": "string",
+      "value": "\"vault\""
+    }
+  ]
+}

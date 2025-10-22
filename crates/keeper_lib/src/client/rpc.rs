@@ -17,6 +17,7 @@ pub struct Rpc {
     cu_limit: u32,
     cu_price_micro_lamports: u64,
     backoff_ms: u64,
+    max_remaining_accounts: usize,
 }
 
 impl Rpc {
@@ -29,6 +30,7 @@ impl Rpc {
         cu_limit: u32,
         cu_price_micro_lamports: u64,
         backoff_ms: u64,
+        max_remaining_accounts: usize,
     ) -> Self {
         let commitment_cfg = CommitmentConfig { commitment };
         let inner = RpcClient::new_with_timeout_and_commitment(
@@ -51,6 +53,7 @@ impl Rpc {
             cu_limit,
             cu_price_micro_lamports,
             backoff_ms,
+            max_remaining_accounts,
         }
     }
 
@@ -80,6 +83,10 @@ impl Rpc {
 
     pub fn backoff_ms(&self) -> u64 {
         self.backoff_ms
+    }
+
+    pub fn max_remaining_accounts(&self) -> usize {
+        self.max_remaining_accounts
     }
 }
 

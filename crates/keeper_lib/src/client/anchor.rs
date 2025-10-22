@@ -11,7 +11,10 @@ use solana_sdk::{
 
 use crate::{
     client::rpc::{Rpc, send_tx_with_retry},
-    pda::{derive_asset_pda, derive_config_pda, derive_group_asset_pda, derive_round_pda},
+    pda::{
+        derive_asset_pda, derive_bet_pda, derive_config_pda, derive_group_asset_pda,
+        derive_round_pda,
+    },
     types::{AssetAccount, ConfigAccount, GroupAssetAccount, MarketType, RoundAccount},
 };
 
@@ -197,6 +200,7 @@ pub fn start_round(
     Ok(sig)
 }
 
+/// Capture the start price for a group
 pub fn capture_start_price(
     rpc: &Rpc,
     payer: &Keypair,
@@ -280,6 +284,7 @@ pub fn capture_start_price(
     Ok(sigs)
 }
 
+/// Finalize the start price for a group
 pub fn finalize_start_group_assets(
     rpc: &Rpc,
     payer: &Keypair,
@@ -361,6 +366,7 @@ pub fn finalize_start_group_assets(
     Ok(sigs)
 }
 
+/// Finalize the start groups
 pub fn finalize_start_groups(
     rpc: &Rpc,
     payer: &Keypair,
@@ -414,4 +420,110 @@ pub fn finalize_start_groups(
     let sig = send_tx_with_retry(&rpc, payer, [instruction].to_vec())?;
 
     Ok(sig)
+}
+
+pub fn settle_single_round(
+    rpc: &Rpc,
+    payer: &Keypair,
+    config_pda: &Pubkey,
+    round_pda: &Pubkey,
+    round_vault: &Pubkey,
+    round: &RoundAccount,
+    treasury: &Pubkey,
+    treasury_token_account: &Pubkey,
+    gold_price_feed: &Pubkey,
+    token_mint: &Pubkey,
+    token_program_id: &Pubkey,
+    associated_token_program_id: &Pubkey,
+    system_program_id: &Pubkey,
+    program_id: &Pubkey,
+) -> Result<Signature> {
+    let max_remaining_accounts = rpc.max_remaining_accounts();
+
+    let data = sighash_global("settle_single_round").to_vec();
+
+    let base_accounts = || -> Vec<AccountMeta> {
+        vec![
+            AccountMeta::new(payer.pubkey(), true),
+            AccountMeta::new(*config_pda, false),
+            AccountMeta::new(*round_pda, false),
+            AccountMeta::new(*round_vault, false),
+            AccountMeta::new_readonly(*gold_price_feed, false),
+            AccountMeta::new_readonly(*treasury, false),
+            AccountMeta::new(*treasury_token_account, false),
+            AccountMeta::new_readonly(*token_mint, false),
+            AccountMeta::new_readonly(*token_program_id, false),
+            AccountMeta::new_readonly(*associated_token_program_id, false),
+            AccountMeta::new_readonly(*system_program_id, false),
+        ]
+    };
+
+    // If there are no bets, settle the round immediately
+    if round.total_bets == 0 {
+        let instruction = Instruction {
+            data: data.clone(),
+            accounts: base_accounts(),
+            program_id: *program_id,
+        };
+        let sig = send_tx_with_retry(&rpc, payer, [instruction].to_vec())?;
+        return Ok(sig);
+    }
+
+    let total = round.total_bets as usize;
+    let mut last_sig: Option<Signature> = None;
+
+    let mut start = 1usize;
+    while start <= total {
+        let end = (start + max_remaining_accounts - 1).min(total);
+        println!("settling bets from {} to {}", start, end);
+
+        let mut remaining_accounts: Vec<AccountMeta> = Vec::with_capacity(end - start + 1);
+        for bet_id in start..=end {
+            let bet_pda = derive_bet_pda(program_id, round_pda, bet_id as u64);
+            remaining_accounts.push(AccountMeta {
+                pubkey: bet_pda,
+                is_signer: false,
+                is_writable: true,
+            });
+        }
+
+        let accounts = base_accounts()
+            .into_iter()
+            .chain(remaining_accounts.into_iter())
+            .collect();
+
+        let instruction = Instruction {
+            data: data.clone(),
+            accounts,
+            program_id: *program_id,
+        };
+
+        let sig = send_tx_with_retry(&rpc, payer, [instruction].to_vec())?;
+        last_sig = Some(sig);
+
+        println!("settled bets from {} to {} with sig {}", start, end, sig);
+
+        start = end.saturating_add(1);
+    }
+
+    Ok(last_sig.expect("no signatures returned"))
+}
+
+pub fn settle_group_round(
+    rpc: &Rpc,
+    payer: &Keypair,
+    config_pda: &Pubkey,
+    round_pda: &Pubkey,
+    round_vault: &Pubkey,
+    round: &RoundAccount,
+    gold_price_feed: &Pubkey,
+    treasury: &Pubkey,
+    treasury_token_account: &Pubkey,
+    token_mint: &Pubkey,
+    token_program_id: &Pubkey,
+    associated_token_program_id: &Pubkey,
+    system_program_id: &Pubkey,
+    program_id: &Pubkey,
+) -> Result<Signature> {
+    return Err(anyhow::anyhow!("settle_group_round not implemented"));
 }

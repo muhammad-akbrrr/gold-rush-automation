@@ -5,6 +5,7 @@ use keeper_lib::{
         anchor::{get_config_account, get_price_feed_account},
         rpc::Rpc,
     },
+    pda::derive_token_account_pda,
     types::ConfigAccount,
     wallet::load_keypair_from_file,
 };
@@ -18,7 +19,12 @@ pub mod keepers;
 pub struct App {
     rpc: Rpc,
     signer: Arc<Keypair>,
+    treasury: Pubkey,
+    treasury_token_account: Pubkey,
     gold_price_feed: Pubkey,
+    token_mint: Pubkey,
+    token_program_id: Pubkey,
+    associated_token_program_id: Pubkey,
     push_oracle_program_id: Pubkey,
     system_program_id: Pubkey,
     program_id: Pubkey,
@@ -35,19 +41,27 @@ impl App {
             cfg.cu_limit,
             cfg.cu_price_micro_lamports,
             cfg.backoff_ms,
+            cfg.max_remaining_accounts,
         );
         let signer = Arc::new(load_keypair_from_file(&cfg.keeper_keypair_path)?);
         let gold_price_feed =
             get_price_feed_account(0, &cfg.gold_price_feed_id, &cfg.push_oracle_program_id)?;
-
-        println!("gold_price_feed_id: {:?}", &cfg.gold_price_feed_id);
-        println!("push_oracle_program_id: {:?}", &cfg.push_oracle_program_id);
-        println!("Gold price feed: {:?}", gold_price_feed);
+        let treasury_token_account = derive_token_account_pda(
+            &cfg.token_program_id,
+            &cfg.associated_token_program_id,
+            &cfg.treasury,
+            &cfg.token_mint,
+        );
 
         Ok(Self {
             rpc,
             signer,
+            treasury: cfg.treasury,
+            treasury_token_account,
             gold_price_feed: gold_price_feed,
+            token_mint: cfg.token_mint,
+            token_program_id: cfg.token_program_id,
+            associated_token_program_id: cfg.associated_token_program_id,
             push_oracle_program_id: cfg.push_oracle_program_id,
             system_program_id: cfg.system_program_id,
             program_id: cfg.program_id,

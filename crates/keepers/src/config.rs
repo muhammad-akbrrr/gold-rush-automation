@@ -15,14 +15,20 @@ pub struct RuntimeConfig {
     pub backoff_ms: u64,
 
     pub keeper_keypair_path: String,
-    pub gold_price_feed_id: String,
+    pub treasury: Pubkey,
 
-    pub push_oracle_program_id: Pubkey,
-    pub system_program_id: Pubkey,
-    pub program_id: Pubkey,
+    pub gold_price_feed_id: String,
+    pub token_mint: Pubkey,
 
     pub start_round_period_in_secs: u64,
     pub settle_round_period_in_secs: u64,
+    pub max_remaining_accounts: usize,
+
+    pub token_program_id: Pubkey,
+    pub associated_token_program_id: Pubkey,
+    pub push_oracle_program_id: Pubkey,
+    pub system_program_id: Pubkey,
+    pub program_id: Pubkey,
 }
 
 pub fn load() -> Result<RuntimeConfig> {
@@ -40,19 +46,28 @@ pub fn load() -> Result<RuntimeConfig> {
 
     let keeper_keypair_path =
         env_str("KEEPER_KEYPAIR_PATH", None).context("KEEPER_KEYPAIR_PATH must be set")?;
+    let treasury = env_pubkey("TREASURY", None).context("TREASURY must be set")?;
+
     let gold_price_feed_id =
         env_str("GOLD_PRICE_FEED_ID", None).context("GOLD_PRICE_FEED_ID must be set")?;
-
-    let push_oracle_program_id =
-        env_pubkey("PUSH_ORACLE_PROGRAM_ID", None).context("PUSH_ORACLE_PROGRAM_ID must be set")?;
-    let system_program_id =
-        env_pubkey("SYSTEM_PROGRAM_ID", None).context("SYSTEM_PROGRAM_ID must be set")?;
-    let program_id = env_pubkey("PROGRAM_ID", None).context("PROGRAM_ID must be set")?;
+    let token_mint = env_pubkey("TOKEN_MINT", None).context("TOKEN_MINT must be set")?;
 
     let start_round_period_in_secs = env_u64("START_ROUND_PERIOD_IN_SECS", None)
         .context("START_ROUND_PERIOD_IN_SECS must be set")?;
     let settle_round_period_in_secs = env_u64("SETTLE_ROUND_PERIOD_IN_SECS", None)
         .context("SETTLE_ROUND_PERIOD_IN_SECS must be set")?;
+    let max_remaining_accounts =
+        env_usize("MAX_REMAINING_ACCOUNTS", None).context("MAX_REMAINING_ACCOUNTS must be set")?;
+
+    let token_program_id =
+        env_pubkey("TOKEN_PROGRAM_ID", None).context("TOKEN_PROGRAM_ID must be set")?;
+    let associated_token_program_id = env_pubkey("ASSOCIATED_TOKEN_PROGRAM_ID", None)
+        .context("ASSOCIATED_TOKEN_PROGRAM_ID must be set")?;
+    let push_oracle_program_id =
+        env_pubkey("PUSH_ORACLE_PROGRAM_ID", None).context("PUSH_ORACLE_PROGRAM_ID must be set")?;
+    let system_program_id =
+        env_pubkey("SYSTEM_PROGRAM_ID", None).context("SYSTEM_PROGRAM_ID must be set")?;
+    let program_id = env_pubkey("PROGRAM_ID", None).context("PROGRAM_ID must be set")?;
 
     Ok(RuntimeConfig {
         solana_rpc_url,
@@ -64,12 +79,17 @@ pub fn load() -> Result<RuntimeConfig> {
         cu_price_micro_lamports,
         backoff_ms,
         keeper_keypair_path,
+        treasury,
         gold_price_feed_id,
+        token_mint,
+        start_round_period_in_secs,
+        settle_round_period_in_secs,
+        max_remaining_accounts,
+        token_program_id,
+        associated_token_program_id,
         push_oracle_program_id,
         system_program_id,
         program_id,
-        start_round_period_in_secs,
-        settle_round_period_in_secs,
     })
 }
 
