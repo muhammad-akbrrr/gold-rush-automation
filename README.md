@@ -50,6 +50,11 @@ This monorepo contains two main crates:
 
 Module layout: This repo uses the modern layout (e.g., root `client.rs` plus a `client/` directory for submodules) instead of the classic `client/mod.rs`. For `keepers`, we use the file-as-module `keepers.rs` which exports submodules in the `keepers/` folder (without `keepers/mod.rs`).
 
+## Toolchain
+
+- cargo 1.88.0 (873a06493 2025-05-10)
+- rustc 1.88.0 (6b00bc388 2025-06-23)
+
 ## How to Run
 
 1. Copy example env:

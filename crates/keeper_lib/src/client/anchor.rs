@@ -514,6 +514,7 @@ pub fn finalize_start_groups(
     Ok(sigs)
 }
 
+/// Settle the single round
 pub fn settle_single_round(
     rpc: &Rpc,
     payer: &Keypair,
@@ -918,6 +919,7 @@ pub fn finalize_end_groups(
     Ok(sigs)
 }
 
+/// Settle the group round
 pub fn settle_group_round(
     rpc: &Rpc,
     payer: &Keypair,
