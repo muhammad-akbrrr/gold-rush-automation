@@ -500,13 +500,112 @@ pub fn settle_single_round(
 
         let sig = send_tx_with_retry(&rpc, payer, [instruction].to_vec())?;
         last_sig = Some(sig);
-
         println!("settled bets from {} to {} with sig {}", start, end, sig);
 
         start = end.saturating_add(1);
     }
 
     Ok(last_sig.expect("no signatures returned"))
+}
+
+pub fn capture_end_price(
+    rpc: &Rpc,
+    payer: &Keypair,
+    config_pda: &Pubkey,
+    round_pda: &Pubkey,
+    round: &RoundAccount,
+    push_oracle_program_id: &Pubkey,
+    system_program_id: &Pubkey,
+    program_id: &Pubkey,
+) -> Result<Vec<Signature>> {
+    if !matches!(round.market_type, MarketType::GroupBattle) {
+        bail!("capture_end_price only supported for group battle rounds");
+    }
+
+    if round.total_groups < 1 {
+        bail!("capture_end_price requires at least one group");
+    }
+
+    let max_remaining_accounts = rpc.max_remaining_accounts();
+
+    let mut sigs: Vec<Signature> = Vec::new();
+
+    let data = sighash_global("capture_end_price").to_vec();
+
+    for group_id in 1..=round.total_groups {
+        let group_asset_pda = derive_group_asset_pda(program_id, round_pda, group_id);
+        println!("capturing end price for group {}", group_asset_pda);
+        let group_asset = get_group_asset_account(rpc.client(), program_id, &group_asset_pda)?;
+        if group_asset.total_assets < 1 {
+            println!("group {} has no assets", group_id);
+            continue;
+        }
+        if group_asset.captured_end_price_assets == group_asset.total_assets {
+            println!("group {} already captured end price", group_id);
+            continue;
+        }
+
+        let base_accounts: Vec<AccountMeta> = vec![
+            AccountMeta::new(payer.pubkey(), true),
+            AccountMeta::new(*config_pda, false),
+            AccountMeta::new(*round_pda, false),
+            AccountMeta::new(group_asset_pda, false),
+            AccountMeta::new_readonly(*system_program_id, false),
+        ];
+
+        let per_asset_accounts = 2;
+        let max_assets_per_batch = (max_remaining_accounts / per_asset_accounts).max(1);
+        let total_assets = group_asset.total_assets as usize;
+        let mut start_asset = 1usize;
+        while start_asset <= total_assets {
+            let end_asset = (start_asset + max_assets_per_batch - 1).min(total_assets);
+            println!(
+                "capturing end price for assets from {} to {} in batch of {}",
+                start_asset, end_asset, max_assets_per_batch
+            );
+
+            let mut remaining_accounts: Vec<AccountMeta> =
+                Vec::with_capacity((end_asset - start_asset + 1) * per_asset_accounts);
+            for asset_id in start_asset..=end_asset {
+                let asset_pda = derive_asset_pda(program_id, &group_asset_pda, asset_id as u64);
+                remaining_accounts.push(AccountMeta {
+                    pubkey: asset_pda,
+                    is_signer: false,
+                    is_writable: true,
+                });
+
+                let asset = get_asset_account(rpc.client(), &asset_pda, program_id)?;
+                let price_feed_account =
+                    get_price_feed_account(0, &hex::encode(asset.feed_id), push_oracle_program_id)?;
+                remaining_accounts.push(AccountMeta {
+                    pubkey: price_feed_account,
+                    is_signer: false,
+                    is_writable: false,
+                });
+            }
+
+            let mut accounts = base_accounts.clone();
+            accounts.reserve(remaining_accounts.len());
+            accounts.extend(remaining_accounts.into_iter());
+
+            let instruction = Instruction {
+                data: data.clone(),
+                accounts,
+                program_id: *program_id,
+            };
+
+            let sig = send_tx_with_retry(&rpc, payer, [instruction].to_vec())?;
+            println!(
+                "captured end price for assets from {} to {}: {}",
+                start_asset, end_asset, sig
+            );
+            sigs.push(sig);
+
+            start_asset = end_asset.saturating_add(1);
+        }
+    }
+
+    Ok(sigs)
 }
 
 pub fn settle_group_round(

@@ -1,7 +1,9 @@
 use anyhow::Result;
 use chrono::Utc;
 use keeper_lib::{
-    client::anchor::{get_rounds_by_ids, settle_group_round, settle_single_round},
+    client::anchor::{
+        capture_end_price, get_rounds_by_ids, settle_group_round, settle_single_round,
+    },
     pda::{derive_config_pda, derive_round_pda, derive_round_vault_pda},
     types::{MarketType, RoundAccount, RoundStatus},
 };
@@ -110,6 +112,23 @@ fn settle_group(
 ) -> Result<Signature> {
     println!("settling group round {}", round_pda);
 
+    // Capture end price
+    capture_end_price(
+        &app.rpc,
+        app.signer(),
+        &config_pda,
+        &round_pda,
+        &round,
+        &app.push_oracle_program_id,
+        &app.system_program_id,
+        &app.program_id,
+    )?;
+
+    // Finalize end group assets
+
+    // Finalize end groups
+
+    // Settle group round
     settle_group_round(
         &app.rpc,
         app.signer(),
