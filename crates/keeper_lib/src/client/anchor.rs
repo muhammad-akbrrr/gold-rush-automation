@@ -508,6 +508,7 @@ pub fn settle_single_round(
     Ok(last_sig.expect("no signatures returned"))
 }
 
+/// Capture the end price for a group
 pub fn capture_end_price(
     rpc: &Rpc,
     payer: &Keypair,
@@ -597,6 +598,100 @@ pub fn capture_end_price(
             let sig = send_tx_with_retry(&rpc, payer, [instruction].to_vec())?;
             println!(
                 "captured end price for assets from {} to {}: {}",
+                start_asset, end_asset, sig
+            );
+            sigs.push(sig);
+
+            start_asset = end_asset.saturating_add(1);
+        }
+    }
+
+    Ok(sigs)
+}
+
+/// Finalize the end group assets
+pub fn finalize_end_group_assets(
+    rpc: &Rpc,
+    payer: &Keypair,
+    config_pda: &Pubkey,
+    round_pda: &Pubkey,
+    round: &RoundAccount,
+    system_program_id: &Pubkey,
+    program_id: &Pubkey,
+) -> Result<Vec<Signature>> {
+    if !matches!(round.market_type, MarketType::GroupBattle) {
+        bail!("finalize_end_group_assets only supported for group battle rounds");
+    }
+
+    if round.total_groups < 1 {
+        bail!("finalize_end_group_assets requires at least one group");
+    }
+
+    let max_remaining_accounts = rpc.max_remaining_accounts();
+
+    let mut sigs: Vec<Signature> = Vec::new();
+
+    let data = sighash_global("finalize_end_group_asset").to_vec();
+
+    for group_id in 1..=round.total_groups {
+        let group_asset_pda = derive_group_asset_pda(program_id, round_pda, group_id);
+        let group_asset = get_group_asset_account(rpc.client(), program_id, &group_asset_pda)?;
+
+        if group_asset.total_assets < 1 {
+            println!("group {} has no assets", group_id);
+            continue;
+        }
+
+        if group_asset.captured_end_price_assets != group_asset.total_assets {
+            println!("group {} has not captured end price", group_id);
+            continue;
+        }
+
+        if group_asset.finalized_end_price_assets == group_asset.total_assets {
+            println!("group {} already finalized end price", group_id);
+            continue;
+        }
+
+        let total_assets = group_asset.total_assets as usize;
+        let mut start_asset = 1usize;
+        while start_asset <= total_assets {
+            let end_asset = (start_asset + max_remaining_accounts - 1).min(total_assets);
+            println!(
+                "finalizing end group assets from {} to {} in batch of {}",
+                start_asset, end_asset, max_remaining_accounts
+            );
+
+            let mut remaining_accounts: Vec<AccountMeta> =
+                Vec::with_capacity(end_asset - start_asset + 1);
+            for asset_id in start_asset..=end_asset {
+                let asset_pda = derive_asset_pda(program_id, &group_asset_pda, asset_id as u64);
+                remaining_accounts.push(AccountMeta {
+                    pubkey: asset_pda,
+                    is_signer: false,
+                    is_writable: true,
+                });
+            }
+
+            let accounts = vec![
+                AccountMeta::new(payer.pubkey(), true),
+                AccountMeta::new(*config_pda, false),
+                AccountMeta::new(*round_pda, false),
+                AccountMeta::new(group_asset_pda, false),
+                AccountMeta::new_readonly(*system_program_id, false),
+            ]
+            .into_iter()
+            .chain(remaining_accounts.into_iter())
+            .collect();
+
+            let instruction = Instruction {
+                data: data.clone(),
+                accounts,
+                program_id: *program_id,
+            };
+
+            let sig = send_tx_with_retry(&rpc, payer, [instruction].to_vec())?;
+            println!(
+                "finalized end group assets from {} to {}: {}",
                 start_asset, end_asset, sig
             );
             sigs.push(sig);
