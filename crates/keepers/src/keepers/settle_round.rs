@@ -28,18 +28,16 @@ pub fn run_one(app: &App) -> Result<Vec<Signature>> {
     let batch_size = 100;
 
     while start <= end {
+        println!("======================={}=======================", start);
+
         let upper = start.saturating_add(batch_size - 1).min(end);
         let ids: Vec<u64> = (start..=upper).collect();
         let rounds = get_rounds_by_ids(app.rpc.client(), &app.program_id, &ids)?;
         println!("found {} rounds", rounds.len());
 
         for round in rounds {
-            println!("round {}: {:?}", round.id, round.status);
-            println!("round market type: {:?}", round.market_type);
-            println!("round total bets: {}", round.total_bets);
-            println!("round settled bets: {}", round.settled_bets);
-            println!("round start time: {}", round.start_time);
-            println!("round end time: {}", round.end_time);
+            println!("--------------------------------");
+            println!("round {:#?}", round);
 
             if matches!(
                 round.status,
@@ -54,7 +52,25 @@ pub fn run_one(app: &App) -> Result<Vec<Signature>> {
                         settle_single(app, &config_pda, &round_pda, &round_vault_pda, &round)
                     }
                     MarketType::GroupBattle => {
-                        settle_group(app, &config_pda, &round_pda, &round_vault_pda, &round)
+                        match settle_group(&app, &config_pda, &round_pda, &round_vault_pda, &round)
+                        {
+                            Ok(sigs) => sigs
+                                .last()
+                                .cloned()
+                                .ok_or_else(|| anyhow::anyhow!("no signature returned"))
+                                .map_err(|err| {
+                                    anyhow::anyhow!(
+                                        "settle_group failed for round {}: {:#}",
+                                        round.id,
+                                        err
+                                    )
+                                }),
+                            Err(err) => Err(anyhow::anyhow!(
+                                "settle_group failed for round {}: {:#}",
+                                round.id,
+                                err
+                            )),
+                        }
                     }
                 };
                 match sig_res {
@@ -110,42 +126,45 @@ fn settle_group(
     round_pda: &Pubkey,
     round_vault_pda: &Pubkey,
     round: &RoundAccount,
-) -> Result<Signature> {
+) -> Result<Vec<Signature>> {
     println!("settling group round {}", round_pda);
 
-    // Capture end price
-    capture_end_price(
-        &app.rpc,
-        app.signer(),
-        &config_pda,
-        &round_pda,
-        &round,
-        &app.push_oracle_program_id,
-        &app.system_program_id,
-        &app.program_id,
-    )?;
+    // if round has not captured end groups
+    if round.captured_end_groups < round.total_groups {
+        // Capture end price
+        capture_end_price(
+            &app.rpc,
+            app.signer(),
+            &config_pda,
+            &round_pda,
+            &round,
+            &app.push_oracle_program_id,
+            &app.system_program_id,
+            &app.program_id,
+        )?;
 
-    // Finalize end group assets
-    finalize_end_group_assets(
-        &app.rpc,
-        app.signer(),
-        &config_pda,
-        &round_pda,
-        &round,
-        &app.system_program_id,
-        &app.program_id,
-    )?;
+        // Finalize end group assets
+        finalize_end_group_assets(
+            &app.rpc,
+            app.signer(),
+            &config_pda,
+            &round_pda,
+            &round,
+            &app.system_program_id,
+            &app.program_id,
+        )?;
 
-    // Finalize end groups
-    finalize_end_groups(
-        &app.rpc,
-        app.signer(),
-        &config_pda,
-        &round_pda,
-        &round,
-        &app.system_program_id,
-        &app.program_id,
-    )?;
+        // Finalize end groups
+        finalize_end_groups(
+            &app.rpc,
+            app.signer(),
+            &config_pda,
+            &round_pda,
+            &round,
+            &app.system_program_id,
+            &app.program_id,
+        )?;
+    }
 
     // Settle group round
     settle_group_round(
@@ -157,7 +176,6 @@ fn settle_group(
         &round,
         &app.treasury,
         &app.treasury_token_account,
-        &app.gold_price_feed,
         &app.token_mint,
         &app.token_program_id,
         &app.associated_token_program_id,
